@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.12.1
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow:/mlflow
+    command: mlflow server --host 0.0.0.0
