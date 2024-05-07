@@ -81,26 +81,3 @@ def auth_ws_register_model(model_name: str) -> tuple[Workspace, Model]:
     # Register model version
     model = Model.register(workspace=ws, model_name=model_name, model_path=local_path)
     return ws, model
-
-
-def download_blob(container_name: str, blob_name: str) -> None:
-    """
-    Download blob file from Azure Blob Storage container
-    """
-    try:
-        """
-        Read blob data from Azure Blob Storage container
-        """
-        url = f"https://{account_name}.blob.core.windows.net"
-        credential = DefaultAzureCredential()
-        blob_service_client = BlobServiceClient(account_url=url, credential=credential)
-
-        blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name)
-
-        local_file_path = fr'{os.getcwd()}\{blob_name}'
-
-        with open(local_file_path, "wb") as download_file:
-            download_file.write(blob_client.download_blob().readall())
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
