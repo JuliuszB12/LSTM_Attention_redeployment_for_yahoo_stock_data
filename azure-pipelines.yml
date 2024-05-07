@@ -1,0 +1,20 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 (38ca6696-5c82-4571-b2af-bf3f256cf663)'
+    subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'azureml2'
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/azureml_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/azureml_parameters.json'
+    deploymentMode: 'Incremental'
+
