@@ -3,16 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "storageAccountName": {
-      "value": "mlstudio378253745207319"
+      "value": "mlstudio378q3874520207319"
     },
     "keyVaultName": {
-      "value": "mlstudio3727571035629"
+      "value": "mlstudio37289365629"
     },
     "applicationInsightsName": {
-      "value": "mlstudio3763497535631016"
+      "value": "mlstudio376320331016"
     },
     "logAnalyticsWorkspaceName": {
-      "value": "mlstudio3273283423187567"
+      "value": "mlstudio32823978187567"
     },
     "machineLearningWorkspaceName": {
       "value": "mlstudio"
