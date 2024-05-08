@@ -27,4 +27,4 @@ wget https://raw.githubusercontent.com/airbytehq/airbyte/master/run-ab-platform.
 
 echo "Running Airbyte..."
 chmod +x run-ab-platform.sh
-./run-ab-platform.sh -b
+sudo ./run-ab-platform.sh -b
