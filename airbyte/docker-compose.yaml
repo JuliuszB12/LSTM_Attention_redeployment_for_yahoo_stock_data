@@ -1,5 +1,4 @@
 version: "3.8"
-#https://github.com/compose-spec/compose-spec/blob/master/spec.md#using-extensions-as-fragments
 x-logging: &default-logging
   options:
     max-size: "100m"
@@ -16,8 +15,6 @@ services:
         - ${DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock
       networks:
         - airbyte_internal
-  # hook in case we need to add init behavior
-  # every root service (no depends_on) should depend on init
   init:
     image: airbyte/init:${VERSION}
     logging: *default-logging
@@ -363,9 +360,6 @@ volumes:
     name: ${WORKSPACE_DOCKER_MOUNT}
   local_root:
     name: ${LOCAL_DOCKER_MOUNT}
-  # the data volume is only needed for backward compatibility; when users upgrade
-  # from an old Airbyte version that relies on file-based configs, the server needs
-  # to read this volume to copy their configs to the database
   data:
     name: ${DATA_DOCKER_MOUNT}
   db:
