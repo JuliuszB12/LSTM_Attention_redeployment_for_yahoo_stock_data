@@ -26,7 +26,7 @@ echo "Setting up environment variables..."
 echo -e "AIRFLOW_UID=$(id -u)" > .env
 
 echo "Initializing Airflow..."
-sudo docker compose up airflow-init -- build
+sudo docker compose up airflow-init --build
 
 echo "Starting Airflow..."
 sudo docker compose up --build
