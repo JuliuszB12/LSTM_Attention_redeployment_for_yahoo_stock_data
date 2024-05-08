@@ -11,7 +11,7 @@ steps:
     azureResourceManagerConnection: 'Azure subscription 1 (38ca6696-5c82-4571-b2af-bf3f256cf663)'
     subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: 'azureml2'
+    resourceGroupName: 'azureml3'
     location: 'East US 2'
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/azureml_template.json'
