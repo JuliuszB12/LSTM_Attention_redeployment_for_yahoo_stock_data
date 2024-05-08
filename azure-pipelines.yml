@@ -27,7 +27,7 @@ steps:
   displayName: 'Deploy Kafka with its infrastructure'
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(variables.subscriptionId))'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
@@ -41,7 +41,7 @@ steps:
   displayName: 'Deploy Airbyte with its infrastructure'
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(variables.subscriptionId))'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
@@ -55,7 +55,7 @@ steps:
   displayName: 'Deploy MLflow with its infrastructure'
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(variables.subscriptionId))'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
@@ -69,7 +69,7 @@ steps:
   displayName: 'Deploy Airflow with its infrastructure'
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(variables.subscriptionId))'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
