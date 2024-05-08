@@ -16,13 +16,10 @@ sudo apt-get update
 echo "Installing Docker..."
 sudo apt-get install docker-ce docker-ce-cli -y
 
-echo "Adding user to Docker group..."
-sudo usermod -a -G docker $USER
-
 echo "Installing Docker Compose..."
 sudo apt-get install docker-compose-plugin -y
 
 echo "Starting Zookeeper and Kafka..."
-docker compose up
+sudo docker compose up
 
 echo "Setup complete!"
