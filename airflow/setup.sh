@@ -16,9 +16,6 @@ sudo apt-get update
 echo "Installing Docker..."
 sudo apt-get install docker-ce docker-ce-cli -y
 
-echo "Adding user to Docker group..."
-sudo usermod -a -G docker $USER
-
 echo "Installing Docker Compose..."
 sudo apt-get install docker-compose-plugin -y
 
@@ -29,9 +26,9 @@ echo "Setting up environment variables..."
 echo -e "AIRFLOW_UID=$(id -u)" > .env
 
 echo "Initializing Airflow..."
-docker compose up airflow-init -- build
+sudo docker compose up airflow-init -- build
 
 echo "Starting Airflow..."
-docker compose up --build
+sudo docker compose up --build
 
 echo "Setup complete!"
