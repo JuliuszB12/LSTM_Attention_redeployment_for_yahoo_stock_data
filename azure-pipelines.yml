@@ -2,8 +2,8 @@ trigger:
 - main
 
 variables:
-  subscriptionId: 38ca6696-5c82-4571-b2af-bf3f256cf663
-  resourceGroupName: cd5
+  subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
+  resourceGroupName: 'cd5'
 
 pool:
   vmImage: ubuntu-latest
@@ -13,7 +13,7 @@ steps:
   displayName: 'Deploy Azure ML Studio Workspace and dependencies'
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(variables.subscriptionId))'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
