@@ -22,6 +22,9 @@ sudo usermod -a -G docker $USER
 echo "Installing Docker Compose..."
 sudo apt-get install docker-compose-plugin -y
 
+echo "Getting Airbyte..."
+wget https://raw.githubusercontent.com/airbytehq/airbyte/master/run-ab-platform.sh
+
 echo "Running Airbyte..."
 chmod +x run-ab-platform.sh
 ./run-ab-platform.sh -b
