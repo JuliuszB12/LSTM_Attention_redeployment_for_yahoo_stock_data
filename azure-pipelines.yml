@@ -2,7 +2,7 @@ trigger:
 - main
 
 variables:
-  subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
+  subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663' # test
   resourceGroupName: 'cd5'
 
 pool:
