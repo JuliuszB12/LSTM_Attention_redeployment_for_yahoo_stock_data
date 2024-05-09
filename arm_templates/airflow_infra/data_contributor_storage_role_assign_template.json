@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineName": {
+            "type": "String",
+            "metadata": {
+                "description": "Virtual Machine Name"
+            }
+        },
+        "storageAccountName": {
+            "type": "String",
+            "metadata": {
+                "description": "Storage Account Name"
+            }
+        }
+    },
+    "variables": {
+        "StorageBlobDataContributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+        "TestVariable": "[concat(parameters('storageAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId, 'data'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[variables('TestVariable')]",
+            "properties": {
+                "roleDefinitionId": "[variables('StorageBlobDataContributor')]",
+                "principalId": "[reference(resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName')), '2019-03-01', 'Full').identity.principalId]"
+            }
+        }
+    ]
+}

@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_continuous_deployment'
+  resourceGroupName: 'rocket_test_attempt'
 
 pool:
   vmImage: ubuntu-latest
@@ -162,3 +162,47 @@ steps:
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
     deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Contributor role assignment to airflow infra for blob storage'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/contributor_storage_role_assign_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/storage_role_assign_parameters.json'
+    deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Storage blob data contributor role assignment to airflow infra for blob storage'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/data_contributor_storage_role_assign_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/storage_role_assign_parameters.json'
+    deploymentMode: 'Incremental'
+
+- task: AzurePowerShell@5
+  displayName: 'Contributor role assignment to airflow infra for azure ml workspace'
+  inputs:
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+    ScriptType: 'InlineScript'
+    Inline: |
+      $subscriptionId = "$(subscriptionId)"
+      $resourceGroupName = "$(resourceGroupName)"
+      $vmName = "airflow"
+      $amlWorkspaceName = "mlserving"
+      $vm = Get-AzVM -ResourceGroupName $resourceGroupName -Name $vmName
+      $amlWorkspace = Get-AzResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.MachineLearningServices/workspaces" -Name $amlWorkspaceName
+      $amlWorkspaceResourceId = $amlWorkspace.ResourceId
+      New-AzRoleAssignment -ObjectId $vm.Identity.PrincipalId -RoleDefinitionName "Contributor" -Scope $amlWorkspaceResourceId
+    azurePowerShellVersion: 'LatestVersion'
