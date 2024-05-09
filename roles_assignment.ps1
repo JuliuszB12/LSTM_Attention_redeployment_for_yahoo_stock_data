@@ -1,4 +1,4 @@
-$subscriptionId = "<azure_subscriptionId>"
+$subscriptionId = "38ca6696-5c82-4571-b2af-bf3f256cf663"
 $resourceGroupName = "deployment_resource_group"
 $vmName = "airflow"
 $storageAccountName = "kafkastockdata1"
