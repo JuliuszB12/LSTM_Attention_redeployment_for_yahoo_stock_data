@@ -11,6 +11,20 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy temporary Azure Blob Storage'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_parameters.json'
+    deploymentMode: 'Incremental'
+
 - script: |
     tar -czf airbyte.tar.gz airbyte
     tar -czf kafka.tar.gz kafka
@@ -43,7 +57,21 @@ steps:
     csmFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_parameters.json'
     deploymentMode: 'Incremental'
-
+    
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy Azure Blob Storage'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_parameters.json'
+    deploymentMode: 'Incremental'
+    
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: 'Deploy Kafka with its infrastructure'
   inputs:
@@ -140,20 +168,6 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airflow_mlflow_vnet_peering_parameters.json'
-    deploymentMode: 'Incremental'
-    
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Azure Blob Storage'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_parameters.json'
     deploymentMode: 'Incremental'
     
 - task: AzureResourceManagerTemplateDeployment@3
