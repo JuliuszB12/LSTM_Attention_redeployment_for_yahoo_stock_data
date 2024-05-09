@@ -2,42 +2,33 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "storageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the Azure Storage Account"
-      }
-    },
-    "keyVaultName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the Azure Key Vault"
-      }
-    },
-    "applicationInsightsName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the Azure Application Insights"
-      }
-    },
-    "logAnalyticsWorkspaceName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the Azure Log Analytics Workspace"
-      }
-    },
     "machineLearningWorkspaceName": {
       "type": "string",
       "metadata": {
         "description": "Name of the Azure Machine Learning Workspace"
       }
+    },
+    "currentDateTime": {
+      "type": "string",
+      "defaultValue": "[utcNow()]",
+      "metadata": {
+        "description": "Current UTC date and time"
+      }
     }
+  },
+  "variables": {
+    "uniqueSuffix": "[toLower(uniqueString(resourceGroup().id, parameters('currentDateTime')))]",
+    "concatenatedName": "[concat(parameters('machineLearningWorkspaceName'), variables('uniqueSuffix'))]",
+    "storageAccountName": "[substring(variables('concatenatedName'), 0, min(length(variables('concatenatedName')), 24))]",
+    "keyVaultName": "[concat(parameters('machineLearningWorkspaceName'), variables('uniqueSuffix'))]",
+    "applicationInsightsName": "[concat(parameters('machineLearningWorkspaceName'), variables('uniqueSuffix'))]",
+    "logAnalyticsWorkspaceName": "[concat(parameters('machineLearningWorkspaceName'), variables('uniqueSuffix'))]"
   },
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2019-06-01",
-      "name": "[parameters('storageAccountName')]",
+      "name": "[variables('storageAccountName')]",
       "location": "[resourceGroup().location]",
       "sku": {
         "name": "Standard_LRS"
@@ -48,7 +39,7 @@
     {
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2019-09-01",
-      "name": "[parameters('keyVaultName')]",
+      "name": "[variables('keyVaultName')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "sku": {
@@ -62,7 +53,7 @@
     {
       "type": "microsoft.insights/components",
       "apiVersion": "2015-05-01",
-      "name": "[parameters('applicationInsightsName')]",
+      "name": "[variables('applicationInsightsName')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "Application_Type": "web"
@@ -71,10 +62,10 @@
     {
       "type": "Microsoft.OperationalInsights/workspaces",
       "apiVersion": "2020-03-01-preview",
-      "name": "[parameters('logAnalyticsWorkspaceName')]",
+      "name": "[variables('logAnalyticsWorkspaceName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('applicationInsightsName'))]"
+        "[resourceId('microsoft.insights/components', variables('applicationInsightsName'))]"
       ],
       "properties": {
         "sku": {
@@ -88,26 +79,21 @@
       "name": "[parameters('machineLearningWorkspaceName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
-        "[resourceId('microsoft.insights/components', parameters('applicationInsightsName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "[resourceId('microsoft.insights/components', variables('applicationInsightsName'))]"
       ],
       "identity": {
         "type": "SystemAssigned"
       },
       "properties": {
-        "applicationInsights": "[resourceId('microsoft.insights/components', parameters('applicationInsightsName'))]",
-        "keyVault": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
-        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+        "applicationInsights": "[resourceId('microsoft.insights/components', variables('applicationInsightsName'))]",
+        "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
         "hbiWorkspace": false,
         "publicNetworkAccess": "Disabled"
       }
     }
-  ],
-  "outputs": {
-    "machineLearningWorkspaceId": {
-      "type": "string",
-      "value": "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('machineLearningWorkspaceName'))]"
-    }
-  }
+  ]
 }
+

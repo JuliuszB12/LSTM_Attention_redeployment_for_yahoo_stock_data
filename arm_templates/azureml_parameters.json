@@ -2,20 +2,11 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "storageAccountName": {
-      "value": "mlstudio73519"
-    },
-    "keyVaultName": {
-      "value": "mlstudio37542629"
-    },
-    "applicationInsightsName": {
-      "value": "mlstudio554616"
-    },
-    "logAnalyticsWorkspaceName": {
-      "value": "mlstudio2424637"
-    },
     "machineLearningWorkspaceName": {
-      "value": "mlstudio"
+      "value": "mlserving"
+    },
+    "currentDateTime": {
+      "value": "[utcNow()]"
     }
   }
 }
