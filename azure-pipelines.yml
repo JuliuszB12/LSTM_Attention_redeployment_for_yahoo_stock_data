@@ -78,3 +78,73 @@ steps:
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra_parameters.json'
     deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy VNet Peering between Airbyte and Kafka'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peering_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_kafka_vnet_peering_parameters.json'
+    deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy VNet Peering between Kafka and Airflow'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peering_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/kafka_airflow_vnet_peering_parameters.json'
+    deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy VNet Peering between Airflow and MLflow'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peering_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_mlflow_vnet_peering_parameters.json'
+    deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_storage_private_endpoint_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_storage_private_endpoint_parameters.json'
+    deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_mlstudio_private_endpoint_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_mlstudio_private_endpoint_parameters.json'
+    deploymentMode: 'Incremental'

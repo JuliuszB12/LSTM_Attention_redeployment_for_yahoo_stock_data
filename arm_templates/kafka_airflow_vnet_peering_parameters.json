@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnet1Name": {
+      "value": "airflow-vnet"
+    },
+    "vnet2Name": {
+      "value": "kafka-vnet"
+    },
+    "peeringLink1to2Name": {
+      "value": "airflow-kafka"
+    },
+    "peeringLink2to1Name": {
+      "value": "kafka-airflow"
+    }
+  }
+}

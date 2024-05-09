@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnet1Name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the first Virtual Network."
+      }
+    },
+    "vnet2Name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the second Virtual Network."
+      }
+    },
+    "peeringLink1to2Name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the VNet peering from VNet1 to VNet2."
+      }
+    },
+    "peeringLink2to1Name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the VNet peering from VNet2 to VNet1."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+      "name": "[concat(parameters('vnet1Name'), '/', parameters('peeringLink1to2Name'))]",
+      "apiVersion": "2021-02-01",
+      "location": "eastus",
+      "properties": {
+        "allowVirtualNetworkAccess": true,
+        "allowForwardedTraffic": true,
+        "allowGatewayTransit": false,
+        "useRemoteGateways": false,
+        "remoteVirtualNetwork": {
+          "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnet2Name'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+      "name": "[concat(parameters('vnet2Name'), '/', parameters('peeringLink2to1Name'))]",
+      "apiVersion": "2021-02-01",
+      "location": "eastus",
+      "properties": {
+        "allowVirtualNetworkAccess": true,
+        "allowForwardedTraffic": true,
+        "allowGatewayTransit": false,
+        "useRemoteGateways": false,
+        "remoteVirtualNetwork": {
+          "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnet1Name'))]"
+        }
+      }
+    }
+  ]
+}

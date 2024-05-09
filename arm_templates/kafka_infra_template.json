@@ -120,6 +120,9 @@
             }
           ]
         }
+      },
+      "identity": {
+        "type": "SystemAssigned"
       }
     },
     {
