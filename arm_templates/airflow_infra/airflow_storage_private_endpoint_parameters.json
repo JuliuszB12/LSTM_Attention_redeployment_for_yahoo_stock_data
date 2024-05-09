@@ -9,7 +9,7 @@
       "value": "default"
     },
     "storageAccountName": {
-      "value": "kafkastockdatatest"
+      "value": "kafkastockdata1"
     },
     "privateEndpointName": {
       "value": "airflow-storage"
