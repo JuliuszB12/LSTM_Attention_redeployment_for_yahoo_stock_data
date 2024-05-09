@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'test'
+  resourceGroupName: 'test_cicd'
 
 pool:
   vmImage: ubuntu-latest
