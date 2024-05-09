@@ -10,4 +10,11 @@ At the same time Airflow DAG consuming that data and storing it in Azure blob st
 Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Client, Terraform, Azure Resource Manager template, Custom Script Extension, Docker Compose, azure-pipelines.yaml
 
 ## Step-by-step deployment
---desciption
+1. Go Azure Portal -> Azure DevOps organizations -> My Azure DevOps Organizations -> Create new organization -> New Project
+2. Go Project settings -> Service connections -> Create new GitHub and Azure Subscription connections
+3. Go Pipelines -> Pipelines -> Create Pipeline -> GitHub -> choose repo with project -> azure-pipelines.yaml in repo will be automatically identified
+4. Go Azure Portal -> Subscriptions -> choose subscription -> Access control (IAM) -> Add role assignment -> Privileged administrator roles -> User Access Administrator -> Select service principal of Azure DevOps project -> Set recommended setting in Conditions tab -> Review + assign
+5. Run pipeline and wait for completion
+Project is operational
+
+
