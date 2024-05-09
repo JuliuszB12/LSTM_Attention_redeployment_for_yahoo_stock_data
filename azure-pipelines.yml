@@ -4,8 +4,8 @@ trigger:
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
   resourceGroupName: 'rocket_test_1'
-  storageAccountName: 'configswasalreadytaken'
-  containerName: 'configs'
+  tempStorageAccountName: 'configswasalreadytaken'
+  tempContainerName: 'configs'
 
 pool:
   vmImage: ubuntu-latest
@@ -24,10 +24,10 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az storage blob upload --account-name $(storageAccountName) --container-name $(containerName) --file airbyte.tar.gz --name airbyte.tar.gz --overwrite true
-      az storage blob upload --account-name $(storageAccountName) --container-name $(containerName) --file kafka.tar.gz --name kafka.tar.gz --overwrite true
-      az storage blob upload --account-name $(storageAccountName) --container-name $(containerName) --file airflow.tar.gz --name airflow.tar.gz --overwrite true
-      az storage blob upload --account-name $(storageAccountName) --container-name $(containerName) --file mlflow.tar.gz --name mlflow.tar.gz --overwrite true
+      az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airbyte.tar.gz --name airbyte.tar.gz --overwrite true
+      az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file kafka.tar.gz --name kafka.tar.gz --overwrite true
+      az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airflow.tar.gz --name airflow.tar.gz --overwrite true
+      az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file mlflow.tar.gz --name mlflow.tar.gz --overwrite true
   displayName: 'Upload tar.gz files to Azure Blob Storage'
 
 - task: AzureResourceManagerTemplateDeployment@3
