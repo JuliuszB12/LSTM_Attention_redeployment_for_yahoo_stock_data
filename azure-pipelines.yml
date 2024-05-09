@@ -20,7 +20,7 @@ steps:
 
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'YourAzureServiceConnection'
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
