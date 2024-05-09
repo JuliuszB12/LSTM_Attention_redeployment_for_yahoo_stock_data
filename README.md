@@ -1,7 +1,7 @@
 [![Build Status](https://dev.azure.com/jjuzaszek/LSTM_Attention_redeployment_for_yahoo_stock_data/_apis/build/status%2FJuliuszB12.LSTM_Attention_redeployment_for_yahoo_stock?branchName=main)](https://dev.azure.com/jjuzaszek/LSTM_Attention_redeployment_for_yahoo_stock_data/_build/latest?definitionId=19&branchName=main)
 
 ## High-level architecture overview
-![architecture](https://github.com/JuliuszB12/LSTM_Attention_redeployment_for_yahoo_stock/assets/68758875/faf9f779-cde1-4bd1-9873-3ade8bf929aa)
+![architecture](https://github.com/JuliuszB12/LSTM_Attention_redeployment_for_yahoo_stock_data/assets/68758875/9e6e31c6-e104-4c62-aee6-a7fe61f251b0)
 
 ## Description
 Airbyte with yahoo source connector is sending data to Kafka topic at 1-minute intervals about 1-minute prices and volumes of chosen stocks.
