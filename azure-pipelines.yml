@@ -197,3 +197,13 @@ steps:
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
     deploymentMode: 'Incremental'
+    
+- task: AzurePowerShell@5
+  displayName: 'Roles assignment'
+  inputs:
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+    ScriptType: 'FilePath'
+    ScriptPath: 'scripts/roles_assignment.ps1'
+    ScriptArguments: '-subscriptionId "$(subscriptionId)" -resourceGroupName "$(resourceGroupName)"'
+    azurePowerShellVersion: 'LatestVersion'
+    
