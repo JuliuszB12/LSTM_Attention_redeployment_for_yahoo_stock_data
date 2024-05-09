@@ -3,12 +3,33 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test_attempt'
+  resourceGroupName: 'rocket_test_1'
+  storageAccountName: 'configswasalreadytaken'
+  containerName: 'configs'
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
+- script: |
+    tar -czf airbyte.tar.gz airbyte
+    tar -czf kafka.tar.gz kafka
+    tar -czf airflow.tar.gz airflow
+    tar -czf mlflow.tar.gz mlflow
+  displayName: 'Compress Folders'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'YourAzureServiceConnection'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage blob upload --account-name $(storageAccountName) --container-name $(containerName) --file airbyte.tar.gz --name airbyte.tar.gz --overwrite true
+      az storage blob upload --account-name $(storageAccountName) --container-name $(containerName) --file kafka.tar.gz --name kafka.tar.gz --overwrite true
+      az storage blob upload --account-name $(storageAccountName) --container-name $(containerName) --file airflow.tar.gz --name airflow.tar.gz --overwrite true
+      az storage blob upload --account-name $(storageAccountName) --container-name $(containerName) --file mlflow.tar.gz --name mlflow.tar.gz --overwrite true
+  displayName: 'Upload tar.gz files to Azure Blob Storage'
+
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: 'Deploy Azure Blob Storage'
   inputs:
@@ -163,36 +184,40 @@ steps:
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
     deploymentMode: 'Incremental'
 
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Contributor role assignment to airflow infra for blob storage'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/contributor_storage_role_assign_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/storage_role_assign_parameters.json'
-    deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Storage blob data contributor role assignment to airflow infra for blob storage'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/data_contributor_storage_role_assign_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/storage_role_assign_parameters.json'
-    deploymentMode: 'Incremental'
-
 - task: AzurePowerShell@5
-  displayName: 'Contributor role assignment to airflow infra for azure ml workspace'
+  displayName: 'Contributor role assignment to airflow infra for Azure storage account'
+  inputs:
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+    ScriptType: 'InlineScript'
+    Inline: |
+      $subscriptionId = "$(subscriptionId)"
+      $resourceGroupName = "$(resourceGroupName)"
+      $vmName = "airflow"
+      $storageAccountName = "kafkastockdata1"
+      $vm = Get-AzVM -ResourceGroupName $resourceGroupName -Name $vmName
+      $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
+      $storageAccountResourceId = $storageAccount.Id
+      New-AzRoleAssignment -ObjectId $vm.Identity.PrincipalId -RoleDefinitionName "Contributor" -Scope $storageAccountResourceId
+    azurePowerShellVersion: 'LatestVersion'
+    
+- task: AzurePowerShell@5
+  displayName: 'Storage Blob Data Contributor role assignment to airflow infra for Azure storage account'
+  inputs:
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+    ScriptType: 'InlineScript'
+    Inline: |
+      $subscriptionId = "$(subscriptionId)"
+      $resourceGroupName = "$(resourceGroupName)"
+      $vmName = "airflow"
+      $storageAccountName = "kafkastockdata1"
+      $vm = Get-AzVM -ResourceGroupName $resourceGroupName -Name $vmName
+      $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
+      $storageAccountResourceId = $storageAccount.Id
+      New-AzRoleAssignment -ObjectId $vm.Identity.PrincipalId -RoleDefinitionName "Storage Blob Data Contributor" -Scope $storageAccountResourceId
+    azurePowerShellVersion: 'LatestVersion'
+    
+- task: AzurePowerShell@5
+  displayName: 'Contributor role assignment to airflow infra for Azure ML workspace'
   inputs:
     azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
     ScriptType: 'InlineScript'
