@@ -1,5 +1,8 @@
-$subscriptionId = "38ca6696-5c82-4571-b2af-bf3f256cf663"
-$resourceGroupName = "rocket_test_trial"
+param (
+    [string]$subscriptionId,
+    [string]$resourceGroupName
+)
+
 $vmName = "airflow"
 $storageAccountName = "kafkastockdata1"
 $vm = Get-AzVM -ResourceGroupName $resourceGroupName -Name $vmName
