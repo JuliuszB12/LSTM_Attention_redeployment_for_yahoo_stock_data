@@ -9,8 +9,5 @@ At the same time Airflow DAG consuming that data and storing it in Azure blob st
 
 Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Client, Terraform, Azure Resource Manager template, Custom Script Extension, Docker Compose, azure-pipelines.yaml
 
-## Azure complete infrastructure chart
-![rocket_continuous_deployment](https://github.com/JuliuszB12/LSTM_Attention_redeployment_for_yahoo_stock_data/assets/68758875/4e18f0e8-bdea-40da-94cb-2e04d6180245)
-
 ## Step-by-step deployment
 --desciption
