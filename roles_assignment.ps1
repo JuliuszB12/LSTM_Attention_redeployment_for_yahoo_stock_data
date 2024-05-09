@@ -1,5 +1,5 @@
-$subscriptionId = "38ca6696-5c82-4571-b2af-bf3f256cf663"
-$resourceGroupName = "rocket_test_1"
+$subscriptionId = "<azure_subscriptionId>"
+$resourceGroupName = "deployment_resource_group"
 $vmName = "airflow"
 $storageAccountName = "kafkastockdata1"
 $vm = Get-AzVM -ResourceGroupName $resourceGroupName -Name $vmName
