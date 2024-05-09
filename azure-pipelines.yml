@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_initial_test'
+  resourceGroupName: 'rocket_test'
 
 pool:
   vmImage: ubuntu-latest
@@ -104,7 +104,7 @@ steps:
     location: 'East US 2'
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/vnet_peerings/arm_templates/airbyte_kafka_vnet_peering_parameters.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airbyte_kafka_vnet_peering_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
