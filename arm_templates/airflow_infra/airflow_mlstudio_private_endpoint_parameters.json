@@ -9,7 +9,7 @@
       "value": "default"
     },
     "amlWorkspaceName": {
-      "value": "mlstudio"
+      "value": "mlserving"
     },
     "privateEndpointName": {
       "value": "airflow-mlstudio"
