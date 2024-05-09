@@ -15,7 +15,3 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 3. Go Pipelines -> Pipelines -> Create Pipeline -> GitHub -> choose repo with project -> azure-pipelines.yaml in repo will be automatically identified
 4. Go Azure Portal -> Subscriptions -> choose subscription -> Access control (IAM) -> Add role assignment -> Privileged administrator roles -> User Access Administrator -> Select service principal of Azure DevOps project -> Set recommended setting in Conditions tab -> Review + assign
 5. Run pipeline and wait for completion
-
-  Project is operational
-
-
