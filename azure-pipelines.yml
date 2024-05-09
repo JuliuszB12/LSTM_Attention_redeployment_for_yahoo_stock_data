@@ -3,12 +3,26 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket1'
+  resourceGroupName: 'rocket_initial_test'
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy Azure Blob Storage'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_parameters.json'
+    deploymentMode: 'Incremental'
+
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: 'Deploy Azure ML Studio Workspace and dependencies'
   inputs:
@@ -19,8 +33,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/azureml_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/azureml_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -33,8 +47,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/kafka/kafka_infra_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/kafka/kafka_infra_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -47,8 +61,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airbyte/airbyte_infra_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airbyte/airbyte_infra_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -61,8 +75,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/mlflow/mlflow_infra_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlflow/mlflow_infra_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -75,8 +89,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow/airflow_infra_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow/airflow_infra_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -89,8 +103,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peering_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_kafka_vnet_peering_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/vnet_peerings/arm_templates/airbyte_kafka_vnet_peering_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -103,8 +117,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peering_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/kafka_airflow_vnet_peering_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/kafka_airflow_vnet_peering_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -117,8 +131,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peering_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_mlflow_vnet_peering_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airflow_mlflow_vnet_peering_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -131,8 +145,8 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_storage_private_endpoint_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_storage_private_endpoint_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow/airflow_storage_private_endpoint_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow/airflow_storage_private_endpoint_parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -145,6 +159,6 @@ steps:
     resourceGroupName: $(resourceGroupName)
     location: 'East US 2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_mlstudio_private_endpoint_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_mlstudio_private_endpoint_parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow/airflow_mlstudio_private_endpoint_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow/airflow_mlstudio_private_endpoint_parameters.json'
     deploymentMode: 'Incremental'
