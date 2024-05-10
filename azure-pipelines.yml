@@ -185,7 +185,7 @@ steps:
     deploymentMode: 'Incremental'
 
 - task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
+  displayName: 'Deploy Private Endpoint from Airflow to Azure ML Studio Workspace'
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
@@ -199,7 +199,7 @@ steps:
     deploymentMode: 'Incremental'
     
 - task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
+  displayName: 'Deploy private DNS zone to connect Airflow to Azure Blob Storage'
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
