@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta
+import requests
 import pandas as pd
 import pickle
 from azure.storage.blob import BlobServiceClient
@@ -80,3 +81,19 @@ def auth_ws_register_model(model_name: str) -> tuple[Workspace, Model]:
     # Register model version
     model = Model.register(workspace=ws, model_name=model_name, model_path=local_path)
     return ws, model
+
+
+def get_azure_vm_metadata():
+    metadata_url = "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
+    headers = {
+        "Metadata": "true"
+    }
+    response = requests.get(metadata_url, headers=headers)
+    if response.status_code == 200:
+        metadata = response.json()
+        subscription_id = metadata['compute']['subscriptionId']
+        resource_group = metadata['compute']['resourceGroupName']
+        return subscription_id, resource_group
+    else:
+        return "Failed to retrieve metadata", response.status_code
+
