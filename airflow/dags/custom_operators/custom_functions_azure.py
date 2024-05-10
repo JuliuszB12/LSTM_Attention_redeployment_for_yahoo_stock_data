@@ -11,7 +11,7 @@ from azureml.core.model import InferenceConfig
 from azureml.core.webservice import AksWebservice
 from azureml.core.compute import AksCompute, ComputeTarget
 from azureml.core.conda_dependencies import CondaDependencies
-from .azure_utils import tickers, read_blob, auth_ws_register_model, container_data, container_utils
+from .azure_utils import tickers, read_blob, auth_ws_register_model, container_data
 from .model_utils import preprocess_data, build_model, model_name
 from .mlflow_utils import compare_and_update_production_stage
 
