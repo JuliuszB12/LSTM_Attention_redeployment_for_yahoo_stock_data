@@ -10,7 +10,7 @@ import mlflow
 from mlflow.tracking import MlflowClient
 
 tickers = ['AMZN', 'AXP']
-account_name = 'kafkastockdata'
+account_name = 'kafkastockdata1'
 container_data = "kafka-data3"
 container_utils = "utils"
 
