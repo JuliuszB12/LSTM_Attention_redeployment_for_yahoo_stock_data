@@ -65,13 +65,14 @@ def train_model_task() -> str:
     return compare_and_update_production_stage(model_name, mse, x_val, y_val)
 
 
-def deploy_azureml_task() -> None:
+def deploy_azureml_task(**kwargs) -> None:
     """
     Airflow task\n
     | Deploy mlflow production version of trained model to Azure ML real-time inference endpoint using AKS\n
     Invoke only if new version is set to production in train_model_task
     """
-    controller = 'new_version'
+    ti = kwargs['ti']
+    controller = ti.xcom_pull(task_ids='train_model_task')
     if controller == 'old_version':
         pass
     elif controller == 'new_model':
