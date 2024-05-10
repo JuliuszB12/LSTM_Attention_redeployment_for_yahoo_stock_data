@@ -12,7 +12,6 @@ from mlflow.tracking import MlflowClient
 tickers = ['AMZN', 'AXP']
 account_name = 'kafkastockdata1'
 container_data = "kafka-data3"
-container_utils = "utils"
 
 
 def read_blob(container_name: str) -> pd.DataFrame:
