@@ -16,4 +16,4 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 4. Set Azure Subscription ID and name for new resource group in azure-pipelines.yaml
 5. Go Azure Portal -> Subscriptions -> choose subscription -> Access control (IAM) -> Add role assignment -> Privileged administrator roles -> User Access Administrator -> Select service principal of Azure DevOps project -> Set recommended setting in Conditions tab -> Review + assign
 6. Run pipeline and wait for completion
-7. Project is operational
+7. Project is operational. API call will success after enough time to collect some data and train the first version of a model.
