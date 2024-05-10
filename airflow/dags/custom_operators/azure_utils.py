@@ -71,10 +71,11 @@ def auth_ws_register_model(model_name: str) -> tuple[Workspace, Model]:
     model_uri = f"models:/{model_name}/{prod_version}"
     local_path = mlflow.artifacts.download_artifacts(model_uri, dst_path=f'{os.getcwd()}/artifacts')
 
-    # Auth to Azure ML Workspace with System-assigned managed identity and config.json
+    # Auth to Azure ML Workspace with System-assigned managed identity
     msi_auth = MsiAuthentication()
-    ws = Workspace(subscription_id="38ca6696-5c82-4571-b2af-bf3f256cf663",
-                   resource_group="test_airflow",
+    subscription_id, resource_group = get_azure_vm_metadata()
+    ws = Workspace(subscription_id=subscription_id,
+                   resource_group=resource_group,
                    workspace_name="mlserving",
                    auth=msi_auth)
 
