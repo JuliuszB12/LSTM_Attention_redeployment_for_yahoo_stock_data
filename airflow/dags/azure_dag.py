@@ -19,6 +19,7 @@ dag = DAG(
     default_args=default_args,
     description='DAG for training model and deploy it to Azure ML Endpoint',
     schedule_interval=timedelta(minutes=15),
+    is_paused_upon_creation=False,
     catchup=False
 )
 
