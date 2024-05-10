@@ -198,6 +198,19 @@ steps:
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
     deploymentMode: 'Incremental'
     
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/private_link_template.json'
+    deploymentMode: 'Incremental'
+    
 - task: AzurePowerShell@5
   displayName: 'Roles assignment'
   inputs:
