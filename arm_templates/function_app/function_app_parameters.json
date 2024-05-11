@@ -10,9 +10,6 @@
         },
         "appServicePlanName": {
             "value": "myAppServicePlan265340"
-        },
-        "location": {
-            "value": "[resourceGroup().location]"
         }
     }
 }
