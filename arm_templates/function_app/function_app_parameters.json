@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "functionAppName": {
-            "value": "deployment231135"
+            "value": "deployment20473"
         },
         "storageAccountName": {
-            "value": "mystorageaccount4317685"
+            "value": "mystorageaccount4236785"
         },
         "appServicePlanName": {
-            "value": "myAppServicePlan12345"
+            "value": "myAppServicePlan265340"
         },
         "location": {
             "value": "East US"
