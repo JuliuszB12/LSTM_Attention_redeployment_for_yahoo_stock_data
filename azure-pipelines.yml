@@ -222,7 +222,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
-    overrideParameters: '-functionAppName deployment231135'
+    overrideParameters: '-functionAppName deployment20473'
     deploymentMode: 'Incremental'
 
 - task: UsePythonVersion@0
@@ -232,8 +232,7 @@ steps:
 
 - script: |
     python -m pip install --upgrade pip
-    pip install -r FunctionAPI/requirements.txt --target="./FunctionAPI/.python_packages/lib/site-packages"
-  workingDirectory: $(Build.SourcesDirectory)
+    pip install -r $(Build.SourcesDirectory)/FunctionAPI/requirements.txt --target="$(Build.SourcesDirectory)/FunctionAPI/.python_packages/lib/site-packages"
   displayName: 'Install dependencies'
 
 - script: |
@@ -245,7 +244,7 @@ steps:
   inputs:
     connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
     appType: 'functionAppLinux'
-    appName: 'deployment231135'
+    appName: 'deployment20473'
     package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
     runtimeStack: 'PYTHON|3.10'
     deploymentMethod: 'auto'
