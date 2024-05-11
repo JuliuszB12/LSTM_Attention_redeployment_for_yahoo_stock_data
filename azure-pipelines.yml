@@ -23,6 +23,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_parameters.json'
+    overrideParameters: '-storageAccountName "$(tempStorageAccountName)" -containerName "$(tempContainerName)"'
     deploymentMode: 'Incremental'
 
 - script: |
