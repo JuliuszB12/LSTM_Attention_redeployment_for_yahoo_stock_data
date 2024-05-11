@@ -13,5 +13,5 @@
       "name": "$return"
     }
   ],
-  "scriptFile": "__init__.py"
+  "scriptFile": "function1.py"
 }
