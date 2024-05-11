@@ -12,6 +12,45 @@ pool:
 
 steps:
 - task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: '$(subscriptionId)'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: 'East US 2'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
+    overrideParameters: '-functionAppName deployment20473'
+    deploymentMode: 'Incremental'
+
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.10'
+    addToPath: true
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r $(Build.SourcesDirectory)/FunctionAPI/requirements.txt --target="$(Build.SourcesDirectory)/FunctionAPI/.python_packages/lib/site-packages"
+  displayName: 'Install dependencies'
+
+- script: |
+    cd $(Build.SourcesDirectory)/FunctionAPI/Function
+    zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
+  displayName: 'Package function app'
+
+- task: AzureFunctionApp@2
+  inputs:
+    connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
+    appType: 'functionAppLinux'
+    appName: 'deployment20473'
+    package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
+    runtimeStack: 'PYTHON|3.10'
+    deploymentMethod: 'auto'
+  displayName: 'Deploy to Azure Functions'
+
+- task: AzureResourceManagerTemplateDeployment@3
   displayName: 'Deploy temporary Azure Blob Storage'
   inputs:
     deploymentScope: 'Resource Group'
@@ -211,46 +250,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/private_link_template.json'
     deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: '$(subscriptionId)'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
-    overrideParameters: '-functionAppName deployment20473'
-    deploymentMode: 'Incremental'
-
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.10'
-    addToPath: true
-
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r $(Build.SourcesDirectory)/FunctionAPI/requirements.txt --target="$(Build.SourcesDirectory)/FunctionAPI/.python_packages/lib/site-packages"
-  displayName: 'Install dependencies'
-
-- script: |
-    cd $(Build.SourcesDirectory)/FunctionAPI/Function
-    zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
-  displayName: 'Package function app'
-
-- task: AzureFunctionApp@2
-  inputs:
-    connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
-    appType: 'functionAppLinux'
-    appName: 'deployment20473'
-    package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
-    runtimeStack: 'PYTHON|3.10'
-    deploymentMethod: 'auto'
-  displayName: 'Deploy to Azure Functions'
-    
+ 
 - task: AzurePowerShell@5
   displayName: 'Roles assignment'
   inputs:
