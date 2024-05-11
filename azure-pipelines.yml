@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test3254679'
+  resourceGroupName: 'rocket_test243985'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
 
@@ -36,7 +36,7 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    cd $(Build.SourcesDirectory)/FunctionAPI/Function
+    cd $(Build.SourcesDirectory)/FunctionAPI
     zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
   displayName: 'Package function app'
 
