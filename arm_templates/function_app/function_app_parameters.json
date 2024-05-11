@@ -5,11 +5,32 @@
         "functionAppName": {
             "value": "deployment20473"
         },
-        "storageAccountName": {
-            "value": "mystorageaccount274893"
+        "use32BitWorkerProcess": {
+            "value": false
         },
-        "appServicePlanName": {
-            "value": "myAppServicePlan265340"
+        "ftpsState": {
+            "value": "FtpsOnly"
+        },
+        "linuxFxVersion": {
+            "value": "Python|3.10"
+        },
+        "sku": {
+            "value": "Dynamic"
+        },
+        "skuCode": {
+            "value": "Y1"
+        },
+        "workerSize": {
+            "value": "0"
+        },
+        "workerSizeId": {
+            "value": "0"
+        },
+        "numberOfWorkers": {
+            "value": "1"
+        },
+        "alwaysOn": {
+            "value": false
         }
     }
 }
