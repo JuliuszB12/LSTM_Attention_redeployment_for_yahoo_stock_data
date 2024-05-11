@@ -12,7 +12,7 @@
             "value": "myAppServicePlan265340"
         },
         "location": {
-            "value": "East US 2"
+            "value": "[resourceGroup().location]"
         }
     }
 }
