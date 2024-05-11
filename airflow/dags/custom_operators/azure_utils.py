@@ -84,7 +84,7 @@ def auth_ws_register_model(model_name: str) -> tuple[Workspace, Model]:
     return ws, model
 
 
-def get_azure_vm_metadata():
+def get_azure_vm_metadata() -> tuple[str, str]:
     metadata_url = "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
     headers = {
         "Metadata": "true"
