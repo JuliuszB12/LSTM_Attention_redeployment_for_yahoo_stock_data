@@ -1,9 +1,6 @@
 import azure.functions as func
 import os
 import json
-import joblib
-import mlflow
-from mlflow.tracking import MlflowClient
 from azureml.core.authentication import MsiAuthentication
 from azureml.core.webservice import AksWebservice
 from azureml.core import Workspace
