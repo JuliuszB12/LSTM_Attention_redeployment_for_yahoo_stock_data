@@ -71,4 +71,4 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 **scripts**  
 &emsp;- roles_assignment.ps1 - Roles assignment between Azure services  
   
-**arm_templates** - all Azure Resouce Manager templates used by azure-pipelines.yaml for Continuous Deployment
+**arm_templates** - all Azure Resource Manager templates used by azure-pipelines.yaml for Continuous Deployment
