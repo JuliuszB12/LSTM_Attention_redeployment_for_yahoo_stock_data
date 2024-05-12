@@ -51,9 +51,9 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 &emsp;- dags/custom_operators/custom_functions_kafka.py - functions for PythonOperator tasks in kafka_dag.py  
 &emsp;- dags/custom_operators/custom_functions_azure.py - functions for PythonOperator tasks in azure_dag.py  
 &emsp;- Custom dependencies for custom_functions_kafka.py and custom_functions_azure.py:  
-&emsp;&emsp;dags/custom_operators/azure_utils  
-&emsp;&emsp;dags/custom_operators/model_utils  
-&emsp;&emsp;dags/custom_operators/mlflow_utils  
+&emsp;&emsp;&ensp;dags/custom_operators/azure_utils  
+&emsp;&emsp;&ensp;dags/custom_operators/model_utils  
+&emsp;&emsp;&ensp;dags/custom_operators/mlflow_utils  
 &emsp;- score.py - file executed inside Azure ML Studio real-time inference endpoint during its creation and usage  
 &emsp;- setup.sh - script to deploy Airflow docker containers  
   
