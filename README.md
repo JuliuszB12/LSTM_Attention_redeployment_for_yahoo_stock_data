@@ -43,7 +43,7 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
   - Proceed all required roles assignment between services (Azure PowerShell)
 
 **airbyte**  
-&emsp;- setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> &emsp;kafka connection pipeline  
+&emsp;- setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> kafka connection pipeline  
   
 **airflow**  
 &emsp;- dags/kafka_dag.py - Airflow DAG: extract data from kafka, transform it and upload to Azure Blob Storage  
