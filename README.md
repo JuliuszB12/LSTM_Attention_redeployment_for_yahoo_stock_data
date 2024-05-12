@@ -54,7 +54,8 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 &emsp;&emsp;&ensp;dags/custom_operators/azure_utils  
 &emsp;&emsp;&ensp;dags/custom_operators/model_utils  
 &emsp;&emsp;&ensp;dags/custom_operators/mlflow_utils  
-&emsp;- score.py - file executed inside Azure ML Studio real-time inference endpoint during its creation and usage  
+&emsp;- score.py - file executed inside Azure ML Studio real-time inference endpoint during its creation and usage,  
+the use of global variables in this file is imposed by Azure documentation  
 &emsp;- setup.sh - script to deploy Airflow docker containers  
   
 **kafka**  
