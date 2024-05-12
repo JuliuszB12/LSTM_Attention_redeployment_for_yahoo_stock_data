@@ -43,7 +43,7 @@ azure-pipelines.yaml
   - Proceed all required roles assignment between services (Azure PowerShell)
 
 airbyte  
-  setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> kafka connection pipeline  
+&emsp;setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> kafka connection pipeline  
   
 airflow  
   dags/kafka_dag.py - Airflow DAG: extract data from kafka, transform it and upload to Azure Blob Storage  
