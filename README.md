@@ -43,11 +43,11 @@ azure-pipelines.yaml
   - Proceed all required roles assignment between services (Azure PowerShell)
 
 airbyte  
-&emsp;setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> kafka connection pipeline  
+&emsp;setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> &emsp;kafka connection pipeline  
   
 airflow  
 &emsp;dags/kafka_dag.py - Airflow DAG: extract data from kafka, transform it and upload to Azure Blob Storage  
-&emsp;dags/azure_dag.py - Airflow DAG: extract data from Azure Blob Storage, train new version of machine learning model, fetch production version from MLflow, compare versions, if new &emsp;version is better swap versions in MLflow and deploy new version to Azure Machine Learning Studio real-time inference endpoint hosted on Azure Kubernetes cluster  
+&emsp;dags/azure_dag.py - Airflow DAG: extract data from Azure Blob Storage, train new version of machine learning model, fetch production version from MLflow, compare versions, if new version is better swap versions in MLflow and deploy new version to Azure Machine Learning Studio real-time inference endpoint hosted on Azure Kubernetes cluster  
 &emsp;dags/custom_operators/custom_functions_kafka.py - functions for PythonOperator tasks in kafka_dag.py  
 &emsp;dags/custom_operators/custom_functions_azure.py - functions for PythonOperator tasks in azure_dag.py  
 &emsp;Custom dependencies for custom_functions_kafka.py and custom_functions_azure.py:  
@@ -58,7 +58,7 @@ airflow
 &emsp;setup.sh - script to deploy Airflow docker containers  
   
 kafka  
-&emsp;setup.sh - script to deploy Kafka docker containers, config KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true in docker-compose.yaml allows Airbyte to auto-create all required topics  
+&emsp;setup.sh - script to deploy Kafka docker containers, config KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true &emsp;in docker-compose.yaml allows Airbyte to auto-create all required topics  
   
 mlflow  
 &emsp;setup.sh - script to deploy MLflow docker containers  
