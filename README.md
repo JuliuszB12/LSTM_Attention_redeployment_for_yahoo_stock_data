@@ -46,29 +46,29 @@ airbyte
 &emsp;setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> kafka connection pipeline  
   
 airflow  
-  dags/kafka_dag.py - Airflow DAG: extract data from kafka, transform it and upload to Azure Blob Storage  
-  dags/azure_dag.py - Airflow DAG: extract data from Azure Blob Storage, train new version of machine learning model, fetch production version from MLflow, compare versions, if new  version is better swap versions in MLflow and deploy new version to Azure Machine Learning Studio real-time inference endpoint hosted on Azure Kubernetes cluster  
-  dags/custom_operators/custom_functions_kafka.py - functions for PythonOperator tasks in kafka_dag.py  
-  dags/custom_operators/custom_functions_azure.py - functions for PythonOperator tasks in azure_dag.py  
-  Custom dependencies for custom_functions_kafka.py and custom_functions_azure.py:  
-    dags/custom_operators/azure_utils  
-    dags/custom_operators/model_utils  
-    dags/custom_operators/mlflow_utils  
-  score.py - file executed inside Azure ML Studio real-time inference endpoint during its creation and usage  
-  setup.sh - script to deploy Airflow docker containers  
+&emsp;dags/kafka_dag.py - Airflow DAG: extract data from kafka, transform it and upload to Azure Blob Storage  
+&emsp;dags/azure_dag.py - Airflow DAG: extract data from Azure Blob Storage, train new version of machine learning model, fetch production version from MLflow, compare versions, if new &emsp;version is better swap versions in MLflow and deploy new version to Azure Machine Learning Studio real-time inference endpoint hosted on Azure Kubernetes cluster  
+&emsp;dags/custom_operators/custom_functions_kafka.py - functions for PythonOperator tasks in kafka_dag.py  
+&emsp;dags/custom_operators/custom_functions_azure.py - functions for PythonOperator tasks in azure_dag.py  
+&emsp;Custom dependencies for custom_functions_kafka.py and custom_functions_azure.py:  
+&emsp;&emsp;dags/custom_operators/azure_utils  
+&emsp;&emsp;dags/custom_operators/model_utils  
+&emsp;&emsp;dags/custom_operators/mlflow_utils  
+&emsp;score.py - file executed inside Azure ML Studio real-time inference endpoint during its creation and usage  
+&emsp;setup.sh - script to deploy Airflow docker containers  
   
 kafka  
-  setup.sh - script to deploy Kafka docker containers, config KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true in docker-compose.yaml allows Airbyte to auto-create all required topics  
+&emsp;setup.sh - script to deploy Kafka docker containers, config KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true in docker-compose.yaml allows Airbyte to auto-create all required topics  
   
 mlflow  
-  setup.sh - script to deploy MLflow docker containers  
+&emsp;setup.sh - script to deploy MLflow docker containers  
   
 FunctionAPI  
-  Function/__init__.py - function to fetch model result from Azure ML Studio endpoint  
-  Function/function.json - configuration file for that function  
-  host.json - configuration file for Azure Function App  
+&emsp;Function/__init__.py - function to fetch model result from Azure ML Studio endpoint  
+&emsp;Function/function.json - configuration file for that function  
+&emsp;host.json - configuration file for Azure Function App  
   
 scripts  
-  roles_assignment.ps1 - Roles assignment between Azure services  
+&emsp;roles_assignment.ps1 - Roles assignment between Azure services  
   
 arm_templates - all Azure Resouce Manager templates used by azure-pipelines.yaml for Continuous Deployment
