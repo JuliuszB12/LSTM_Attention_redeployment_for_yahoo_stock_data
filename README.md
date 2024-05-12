@@ -64,7 +64,7 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 &emsp;- setup.sh - script to deploy MLflow docker containers  
   
 **FunctionAPI**  
-&emsp;- Function/__init__.py - function to fetch model result from Azure ML Studio endpoint  
+&emsp;- Function/\_\_init\_\_.py - function to fetch model result from Azure ML Studio endpoint  
 &emsp;- Function/function.json - configuration file for that function  
 &emsp;- host.json - configuration file for Azure Function App  
   
