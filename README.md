@@ -21,7 +21,7 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 
 ## Features overview
 **azure-pipelines.yaml**  
-  Continuous Deployment high-level overview:
+&emsp;Continuous Deployment high-level overview:
   - Assign Azure Subscription ID and new resource group name
   - Deploy temporary Azure Blob Storage for deployment utils (ARM template)
   - Compress airbyte, kafka, airflow and mlflow content folders and send it to temporary storage (Bash)
