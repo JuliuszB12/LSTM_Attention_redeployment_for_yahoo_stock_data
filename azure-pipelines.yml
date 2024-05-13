@@ -3,7 +3,8 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test567890'
+  resourceGroupName: 'rocket_test5678901'
+  location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
 
@@ -18,7 +19,7 @@ steps:
     subscriptionId: '$(subscriptionId)'
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
@@ -58,7 +59,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_parameters.json'
@@ -92,7 +93,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_parameters.json'
@@ -106,7 +107,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_parameters.json'
@@ -120,7 +121,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra/kafka_infra_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra/kafka_infra_parameters.json'
@@ -134,7 +135,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra/airbyte_infra_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra/airbyte_infra_parameters.json'
@@ -148,7 +149,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra/mlflow_infra_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra/mlflow_infra_parameters.json'
@@ -162,7 +163,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_infra_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_infra_parameters.json'
@@ -176,7 +177,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airbyte_kafka_vnet_peering_parameters.json'
@@ -190,7 +191,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/kafka_airflow_vnet_peering_parameters.json'
@@ -204,7 +205,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airflow_mlflow_vnet_peering_parameters.json'
@@ -218,7 +219,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_parameters.json'
@@ -232,7 +233,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_template.json'
     csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
@@ -246,7 +247,7 @@ steps:
     subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: $(resourceGroupName)
-    location: 'East US 2'
+    location: $(location)
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/private_link_template.json'
     deploymentMode: 'Incremental'
