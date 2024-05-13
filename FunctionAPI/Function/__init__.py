@@ -14,9 +14,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # If JSON parsing fails, return a 400 error
         return func.HttpResponse("Invalid JSON", status_code=400)
 
-    name = req_body.get('name')
+    inputs = req_body.get('inputs')
+
+    msi_auth = MsiAuthentication()
+    ws = Workspace(subscription_id="38ca6696-5c82-4571-b2af-bf3f256cf663", 
+                   resource_group="rocket_test56789", 
+                   workspace_name="mlserving", 
+                   auth=msi_auth)
+    service = AksWebservice(ws, 'lstm-service')
+    response = service.run(input_data=inputs)
 
     if name:
-        return func.HttpResponse(f"Hello {name}!", status_code=200)
+        return func.HttpResponse(response, status_code=200)
     else:
-        return func.HttpResponse("Please pass a name in the request body", status_code=400)
+        return func.HttpResponse("Please pass input in the request body", status_code=400)
