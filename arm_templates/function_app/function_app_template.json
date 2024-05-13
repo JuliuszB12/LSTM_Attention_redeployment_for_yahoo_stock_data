@@ -148,7 +148,7 @@
             "type": "microsoft.insights/components",
             "apiVersion": "2020-02-02-preview",
             "name": "[parameters('functionAppName')]",
-            "location": "eastus2",
+            "location": "[variables('location')]",
             "dependsOn": [],
             "properties": {
                 "ApplicationId": "[parameters('functionAppName')]",
