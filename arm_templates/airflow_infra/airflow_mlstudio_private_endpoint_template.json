@@ -16,7 +16,7 @@
     }
   },
   "variables": {
-    "location": "eastus2"
+    "location": "[resourceGroup().location]"
   },
   "resources": [
     {
