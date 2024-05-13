@@ -81,7 +81,8 @@ def deploy_azureml_task(**kwargs) -> None:
 
         # Create conda environment for score.py
         env = Environment('my-env')
-        cd = CondaDependencies.create(pip_packages=['mlflow', 'azureml-defaults', 'numpy', 'tensorflow==2.15.1'],
+        cd = CondaDependencies.create(pip_packages=['mlflow==2.12.1', 'azureml-defaults', 'numpy==1.23.5', 
+                                                    'scikit-learn==1.4.2', 'tensorflow==2.15.1'],
                                       python_version='3.10')
         env.python.conda_dependencies = cd
 
@@ -111,7 +112,8 @@ def deploy_azureml_task(**kwargs) -> None:
 
         # Create conda environment for score.py
         env = Environment('my-env')
-        cd = CondaDependencies.create(pip_packages=['mlflow', 'azureml-defaults', 'numpy', 'tensorflow==2.15.1'],
+        cd = CondaDependencies.create(pip_packages=['mlflow==2.12.1', 'azureml-defaults', 'numpy==1.23.5', 
+                                                    'scikit-learn==1.4.2', 'tensorflow==2.15.1'],
                                       python_version='3.10')
         env.python.conda_dependencies = cd
 
