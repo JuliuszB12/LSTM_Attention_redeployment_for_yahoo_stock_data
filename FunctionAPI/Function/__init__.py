@@ -1,6 +1,4 @@
 import azure.functions as func
-import os
-import json
 from azureml.core.authentication import MsiAuthentication
 from azureml.core.webservice import AksWebservice
 from azureml.core import Workspace
