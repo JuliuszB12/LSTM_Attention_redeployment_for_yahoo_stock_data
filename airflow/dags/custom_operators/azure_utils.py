@@ -67,9 +67,13 @@ def auth_ws_register_model(model_name: str) -> tuple[Workspace, Model]:
     # Download mlflow production version of trained model
     mlflow.set_tracking_uri("http://10.4.0.4:5000")
     client = MlflowClient()
-    prod_version = client.get_model_version_by_alias(model_name, "production").version
-    model_uri = f"models:/{model_name}/{prod_version}"
+    prod_version = client.get_model_version_by_alias(model_name, "production")
+    model_uri = f"models:/{model_name}/{prod_version.version}"
     local_path = mlflow.artifacts.download_artifacts(model_uri, dst_path=f'{os.getcwd()}/artifacts')
+    artifact_uri = f'runs:/{prod_version.run_id}/scaler.joblib'
+    _ = mlflow.artifacts.download_artifacts(artifact_uri, dst_path=local_path)
+    artifact_uri = f'runs:/{prod_version.run_id}/y_scaler.joblib'
+    _ = mlflow.artifacts.download_artifacts(artifact_uri, dst_path=local_path)
 
     # Auth to Azure ML Workspace with System-assigned managed identity
     msi_auth = MsiAuthentication()
@@ -97,4 +101,3 @@ def get_azure_vm_metadata() -> tuple[str, str]:
         return subscription_id, resource_group
     else:
         return "Failed to retrieve metadata", response.status_code
-
