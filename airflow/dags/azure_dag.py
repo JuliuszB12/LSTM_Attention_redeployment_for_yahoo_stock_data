@@ -34,7 +34,7 @@ train_task = PythonOperator(
 deploy_task = PythonOperator(
     task_id='deploy_azureml_task',
     python_callable=deploy_azureml_task,
-    execution_timeout=timedelta(minutes=10),
+    execution_timeout=timedelta(minutes=15),
     provide_context=True,
     dag=dag
 )
