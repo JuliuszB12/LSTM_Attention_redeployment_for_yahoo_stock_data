@@ -71,7 +71,7 @@ def consume_kafka_task() -> None:
                     df[['low', 'close', 'high', 'open']] = df[['low', 'close', 'high', 'open']].round(2)
 
                     # Filter last timestamp and add to initial DataFrame
-                    last_row_df = df.iloc[-10:]
+                    last_row_df = df.iloc[-110:]
                     total_df = pd.concat([total_df, last_row_df], ignore_index=True)
                     consume = not set(tickers).issubset(total_df['symbol'])
 
@@ -79,7 +79,7 @@ def consume_kafka_task() -> None:
     finally:
         # Save data locally
         for i in tickers:
-            for j in range(10, 2, -1):
+            for j in range(110, 2, -1):
                 row = total_df[total_df['symbol'] == i].iloc[-j]
                 if pd.isna(row['close']):
                     continue
