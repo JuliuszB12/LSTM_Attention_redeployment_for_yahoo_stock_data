@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test5678901010101'
+  resourceGroupName: 'rocket_test56789010101010'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -253,6 +253,26 @@ steps:
   displayName: 'Deploy to Azure Functions'
 
 - task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+    ScriptType: 'InlineScript'
+    Inline: |
+      $workspaceName = "mlserving"
+      $resourceGroupName = "$(resourceGroupName)"
+      $workspace = Get-AzResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.MachineLearningServices/workspaces" -Name $workspaceName
+      echo "##vso[task.setvariable variable=workspaceId]$($workspace.ResourceId)"
+    azurePowerShellVersion: 'LatestVersion'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      resourceId=$(echo $(workspaceId))     
+      az resource update --ids $resourceId --set properties.networkSettings.allowInternetOutbound=Allow
+
+- task: AzurePowerShell@5
   displayName: 'Roles assignment'
   inputs:
     azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
@@ -260,4 +280,18 @@ steps:
     ScriptPath: 'scripts/roles_assignment.ps1'
     ScriptArguments: '-subscriptionId "$(subscriptionId)" -resourceGroupName "$(resourceGroupName)"'
     azurePowerShellVersion: 'LatestVersion'
-    
+
+- script: |
+    echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
+    sleep 3900
+  displayName: 'Pause Step'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      resourceId=$(echo $(workspaceId))     
+      az resource update --ids $resourceId --set properties.networkSettings.publicNetworkAccess=Disabled
+
