@@ -249,22 +249,8 @@ steps:
 
 - script: |
     echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
-    sleep 2340
+    sleep 2460
   displayName: 'Pause Step'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Private Endpoint from Airflow to Azure ML Studio Workspace'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
-    deploymentMode: 'Incremental'
 
 - task: AzurePowerShell@5
   inputs:
@@ -286,4 +272,18 @@ steps:
     inlineScript: |
       resourceId=$(echo $(workspaceId))     
       az resource update --ids $resourceId --set properties.publicNetworkAccess=Disabled
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy Private Endpoint from Airflow to Azure ML Studio Workspace'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: $(location)
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_template.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
+    deploymentMode: 'Incremental'
 
