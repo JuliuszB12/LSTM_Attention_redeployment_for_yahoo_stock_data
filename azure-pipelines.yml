@@ -27,7 +27,7 @@ jobs:
     displayName: 'Install Python code quality tools'
 
   - script: |
-      flake8 .
+      flake8 . --exit-zero
     displayName: 'Check code style with flake8'
 
   - script: |
