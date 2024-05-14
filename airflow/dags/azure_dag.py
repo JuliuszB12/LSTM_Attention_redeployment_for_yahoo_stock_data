@@ -20,6 +20,7 @@ dag = DAG(
     description='DAG for training model and deploy it to Azure ML Endpoint',
     schedule_interval=timedelta(minutes=15),
     is_paused_upon_creation=False,
+    max_active_runs=1,
     catchup=False
 )
 
@@ -34,7 +35,7 @@ train_task = PythonOperator(
 deploy_task = PythonOperator(
     task_id='deploy_azureml_task',
     python_callable=deploy_azureml_task,
-    execution_timeout=timedelta(minutes=15),
+    execution_timeout=timedelta(minutes=45),
     provide_context=True,
     dag=dag
 )
