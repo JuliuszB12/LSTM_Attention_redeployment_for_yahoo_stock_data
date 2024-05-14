@@ -290,7 +290,7 @@ jobs:
   
   - script: |
       echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
-      sleep 3180
+      sleep 3000
     displayName: 'Pause Step'
   
   - task: AzurePowerShell@5
