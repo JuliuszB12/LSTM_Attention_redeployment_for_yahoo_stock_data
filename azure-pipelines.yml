@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test16789'
+  resourceGroupName: 'rocket_test167890'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -263,7 +263,7 @@ steps:
 
 - script: |
     echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
-    sleep 3900
+    sleep 2340
   displayName: 'Pause Step'
 
 - task: AzurePowerShell@5
