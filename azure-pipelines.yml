@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test1'
+  resourceGroupName: 'rocket_test001'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -297,9 +297,15 @@ jobs:
   steps:  
   - script: |
       echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
-      sleep 2820
+      sleep 3540
     displayName: 'Pause Step'
-  
+
+- job: Continuous_Deployment_part_3
+
+  pool:
+    vmImage: ubuntu-latest
+
+  steps:   
   - task: AzurePowerShell@5
     inputs:
       azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
