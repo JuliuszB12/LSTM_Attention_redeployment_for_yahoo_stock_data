@@ -25,6 +25,7 @@ wget https://raw.githubusercontent.com/airbytehq/airbyte/master/run-ab-platform.
 echo "Running Airbyte..."
 chmod +x run-ab-platform.sh
 sudo ./run-ab-platform.sh -b &
+
 echo "Creating connection..."
 sleep 300
 chmod +x ./connection_setup.sh
