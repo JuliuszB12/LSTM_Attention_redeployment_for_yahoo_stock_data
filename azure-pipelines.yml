@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test01'
+  resourceGroupName: 'rocket_test1'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -46,8 +46,8 @@ jobs:
       pylint . || echo "Code quality issues"
     displayName: 'Check code quality with pylint'
 
-- job: Continuous_Deployment
-  timeoutInMinutes: 70
+- job: Continuous_Deployment_part_1
+  timeoutInMinutes: 25
 
   pool:
     vmImage: ubuntu-latest
@@ -76,6 +76,7 @@ jobs:
     displayName: 'Compress Folders'
   
   - task: AzureCLI@2
+    displayName: 'Upload tar.gz files to Azure Blob Storage'  
     inputs:
       azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
       scriptType: 'bash'
@@ -85,7 +86,6 @@ jobs:
         az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file kafka.tar.gz --name kafka.tar.gz --overwrite true
         az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airflow.tar.gz --name airflow.tar.gz --overwrite true
         az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file mlflow.tar.gz --name mlflow.tar.gz --overwrite true
-    displayName: 'Upload tar.gz files to Azure Blob Storage'
   
   - task: AzureResourceManagerTemplateDeployment@3
     displayName: 'Deploy Azure ML Studio Workspace and dependencies'
@@ -241,6 +241,7 @@ jobs:
       deploymentMode: 'Incremental'
   
   - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy Azure Function App'   
     inputs:
       deploymentScope: 'Resource Group'
       azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
@@ -270,6 +271,7 @@ jobs:
     displayName: 'Package function app'
   
   - task: AzureFunctionApp@2
+    displayName: 'Deploy to Azure Functions'  
     inputs:
       connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
       appType: 'functionAppLinux'
@@ -277,7 +279,6 @@ jobs:
       package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
       runtimeStack: 'PYTHON|3.10'
       deploymentMethod: 'auto'
-    displayName: 'Deploy to Azure Functions'
   
   - task: AzurePowerShell@5
     displayName: 'Roles assignment'
@@ -287,7 +288,13 @@ jobs:
       ScriptPath: 'scripts/roles_assignment.ps1'
       ScriptArguments: '-subscriptionId "$(subscriptionId)" -resourceGroupName "$(resourceGroupName)"'
       azurePowerShellVersion: 'LatestVersion'
-  
+
+- job: Continuous_Deployment_part_2
+
+  pool:
+    vmImage: ubuntu-latest
+
+  steps:  
   - script: |
       echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
       sleep 2820
