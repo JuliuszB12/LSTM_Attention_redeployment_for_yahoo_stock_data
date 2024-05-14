@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test0123456'
+  resourceGroupName: 'rocket_test01'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -23,27 +23,31 @@ jobs:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install flake8 isort autopep8 black pylint
+      pip install flake8 isort mypy autopep8 black pylint
     displayName: 'Install Python code quality tools'
 
   - script: |
-      flake8 . --exit-zero
+      flake8 . || echo "Code style issues"
     displayName: 'Check code style with flake8'
 
   - script: |
-      isort --check-only . --diff --exit-zero
+      isort --check-only . --diff || echo "Import order issues"
     displayName: 'Check import order with isort'
-    
+
   - script: |
-      autopep8 . --diff --exit-zero
+      mypy . --ignore-missing-imports || echo "Type checking issues"
+    displayName: 'Perform type check with mypy'
+
+  - script: |
+      autopep8 . --diff || echo "Code format issues"
     displayName: 'Check code format with autopep8'
 
   - script: |
-      black --check . --exit-zero
+      black --check . || echo "Code format issues"
     displayName: 'Check code format with black'
-    
+
   - script: |
-      pylint . --exit-zero
+      pylint . || echo "Code quality issues"
     displayName: 'Check code quality with pylint'
 
 - job: Continuous_Deployment
