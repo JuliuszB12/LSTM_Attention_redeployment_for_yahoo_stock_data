@@ -33,11 +33,11 @@ jobs:
   - script: |
       isort --check-only . --diff
     displayName: 'Check import order with isort'
-
+    
   - script: |
-      autopep8 --diff .
+      autopep8 . --diff
     displayName: 'Check code format with autopep8'
-
+    
   - script: |
       pylint . --exit-zero
     displayName: 'Check code quality with pylint'
