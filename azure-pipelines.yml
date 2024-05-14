@@ -23,7 +23,7 @@ jobs:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install flake8 isort autopep8 pylint
+      pip install flake8 isort autopep8 black pylint
     displayName: 'Install Python code quality tools'
 
   - script: |
@@ -31,12 +31,16 @@ jobs:
     displayName: 'Check code style with flake8'
 
   - script: |
-      isort --check-only . --diff
+      isort --check-only . --diff --exit-zero
     displayName: 'Check import order with isort'
     
   - script: |
-      autopep8 . --diff
+      autopep8 . --diff --exit-zero
     displayName: 'Check code format with autopep8'
+
+  - script: |
+      black --check . --exit-zero
+    displayName: 'Check code format with black'
     
   - script: |
       pylint . --exit-zero
