@@ -97,9 +97,12 @@ curl -u airbyte:password -X POST http://localhost:8000/api/v1/connections/create
             }
         ]
     },
-    "schedule": {
-        "units": 1,
-        "timeUnit": "hours"
+    "scheduleType" : "cron",
+    "scheduleData": {
+        "cron": {
+            "cronExpression": "*/7 * * * * ?",
+            "cronTimeZone": "UTC"
+            }
     },
     "status": "active",
     "name": "Yahoo to Kafka"
