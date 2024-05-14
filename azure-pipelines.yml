@@ -35,8 +35,8 @@ jobs:
     displayName: 'Check import order with isort'
 
   - script: |
-    autopep8 --diff .
-  displayName: 'Check code format with autopep8'
+      autopep8 --diff .
+    displayName: 'Check code format with autopep8'
 
   - script: |
       pylint . --exit-zero
