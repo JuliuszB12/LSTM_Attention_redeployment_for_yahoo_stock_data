@@ -9,7 +9,7 @@ variables:
   tempContainerName: 'configs'
 
 jobs:
-- job: Main job
+- job: Main_job
   timeoutInMinutes: 75
 
   pool:
