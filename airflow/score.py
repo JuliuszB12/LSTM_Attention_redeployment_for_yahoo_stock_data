@@ -11,8 +11,8 @@ def init():
     global y_scaler
     model_path = Model.get_model_path('LSTM_Attention_stock_price_regression')
     model = mlflow.pyfunc.load_model(model_path)
-    scaler = joblib.load(model_path + 'scaler.joblib')
-    y_scaler = joblib.load(model_path + 'y_scaler.joblib')
+    scaler = joblib.load(model_path + '/scaler.joblib')
+    y_scaler = joblib.load(model_path + '/y_scaler.joblib')
 
 
 def run(raw_data):
