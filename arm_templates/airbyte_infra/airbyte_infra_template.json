@@ -139,7 +139,7 @@
     "typeHandlerVersion": "2.1",
     "autoUpgradeMinorVersion": true,
     "settings": {
-      "commandToExecute": "[concat('bash -c \"export HOME=/home/', parameters('adminUsername'), ' && cd $HOME && wget https://configswasalreadytaken.blob.core.windows.net/configs/airbyte.tar.gz -O airbyte.tar.gz && tar -xzvf airbyte.tar.gz && cd airbyte && chmod +x setup.sh && ./setup.sh &\"')]"
+      "commandToExecute": "[concat('bash -c \"export HOME=/home/', parameters('adminUsername'), ' && cd $HOME && wget https://configswasalreadytaken.blob.core.windows.net/configs/airbyte.tar.gz -O airbyte.tar.gz && tar -xzvf airbyte.tar.gz && cd airbyte && chmod +x setup.sh && ./setup.sh & sleep 300 && chmod +x connection_setup.sh && ./connection_setup.sh\"')]"
     }
   }
 }
