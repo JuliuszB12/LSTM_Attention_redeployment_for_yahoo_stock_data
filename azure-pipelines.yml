@@ -273,6 +273,7 @@ steps:
     azurePowerShellVersion: 'LatestVersion'
 
 - task: AzureCLI@2
+  displayName: 'AKS cluster and real-time inference endpoint pre-deployment configs'
   inputs:
     azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
     scriptType: 'bash'
@@ -287,6 +288,7 @@ steps:
   displayName: 'Pause Step'
 
 - task: AzureCLI@2
+  displayName: 'Azure ML Studio Workspace post-deployment configs'
   inputs:
     azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
     scriptType: 'bash'
