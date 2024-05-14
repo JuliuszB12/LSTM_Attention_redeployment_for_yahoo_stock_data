@@ -3,287 +3,291 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test0987501'
+  resourceGroupName: 'rocket_test01234'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
 
-pool:
-  vmImage: ubuntu-latest
+jobs:
+- job: Main job
+  timeoutInMinutes: 75
 
-steps:
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy temporary Azure Blob Storage'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_parameters.json'
-    overrideParameters: '-storageAccountName "$(tempStorageAccountName)" -containerName "$(tempContainerName)"'
-    deploymentMode: 'Incremental'
+  pool:
+    vmImage: ubuntu-latest
 
-- script: |
-    tar -czf airbyte.tar.gz airbyte
-    tar -czf kafka.tar.gz kafka
-    tar -czf airflow.tar.gz airflow
-    tar -czf mlflow.tar.gz mlflow
-  displayName: 'Compress Folders'
+  steps:
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy temporary Azure Blob Storage'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_parameters.json'
+      overrideParameters: '-storageAccountName "$(tempStorageAccountName)" -containerName "$(tempContainerName)"'
+      deploymentMode: 'Incremental'
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airbyte.tar.gz --name airbyte.tar.gz --overwrite true
-      az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file kafka.tar.gz --name kafka.tar.gz --overwrite true
-      az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airflow.tar.gz --name airflow.tar.gz --overwrite true
-      az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file mlflow.tar.gz --name mlflow.tar.gz --overwrite true
-  displayName: 'Upload tar.gz files to Azure Blob Storage'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Azure ML Studio Workspace and dependencies'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_parameters.json'
-    deploymentMode: 'Incremental'
-    
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Azure Blob Storage'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_parameters.json'
-    deploymentMode: 'Incremental'
-    
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Kafka with its infrastructure'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra/kafka_infra_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra/kafka_infra_parameters.json'
-    deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Airbyte with its infrastructure'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra/airbyte_infra_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra/airbyte_infra_parameters.json'
-    deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy MLflow with its infrastructure'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra/mlflow_infra_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra/mlflow_infra_parameters.json'
-    deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Airflow with its infrastructure'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_infra_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_infra_parameters.json'
-    deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy VNet Peering between Airbyte and Kafka'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airbyte_kafka_vnet_peering_parameters.json'
-    deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy VNet Peering between Kafka and Airflow'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/kafka_airflow_vnet_peering_parameters.json'
-    deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy VNet Peering between Airflow and MLflow'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airflow_mlflow_vnet_peering_parameters.json'
-    deploymentMode: 'Incremental'
-    
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_parameters.json'
-    deploymentMode: 'Incremental'
-    
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy private DNS zone to connect Airflow to Azure Blob Storage'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/private_link_template.json'
-    deploymentMode: 'Incremental'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: '$(subscriptionId)'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
-    overrideParameters: '-functionAppName deployment20473'
-    deploymentMode: 'Incremental'
-
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.10'
-    addToPath: true
-
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r $(Build.SourcesDirectory)/FunctionAPI/requirements.txt --target="$(Build.SourcesDirectory)/FunctionAPI/.python_packages/lib/site-packages"
-  displayName: 'Install dependencies'
-
-- script: |
-    cd $(Build.SourcesDirectory)/FunctionAPI
-    zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
-  displayName: 'Package function app'
-
-- task: AzureFunctionApp@2
-  inputs:
-    connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
-    appType: 'functionAppLinux'
-    appName: 'deployment20473'
-    package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
-    runtimeStack: 'PYTHON|3.10'
-    deploymentMethod: 'auto'
-  displayName: 'Deploy to Azure Functions'
-
-- task: AzurePowerShell@5
-  displayName: 'Roles assignment'
-  inputs:
-    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
-    ScriptType: 'FilePath'
-    ScriptPath: 'scripts/roles_assignment.ps1'
-    ScriptArguments: '-subscriptionId "$(subscriptionId)" -resourceGroupName "$(resourceGroupName)"'
-    azurePowerShellVersion: 'LatestVersion'
-
-- script: |
-    echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
-    sleep 2460
-  displayName: 'Pause Step'
-
-- task: AzurePowerShell@5
-  inputs:
-    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
-    ScriptType: 'InlineScript'
-    Inline: |
-      $workspaceName = "mlserving"
-      $resourceGroupName = "$(resourceGroupName)"
-      $workspace = Get-AzResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.MachineLearningServices/workspaces" -Name $workspaceName
-      echo "##vso[task.setvariable variable=workspaceId]$($workspace.ResourceId)"
-    azurePowerShellVersion: 'LatestVersion'
-
-- task: AzureCLI@2
-  displayName: 'Azure ML Studio Workspace post-deployment configs'
-  inputs:
-    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      resourceId=$(echo $(workspaceId))     
-      az resource update --ids $resourceId --set properties.publicNetworkAccess=Disabled
-
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'Deploy Private Endpoint from Airflow to Azure ML Studio Workspace'
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-    subscriptionId: $(subscriptionId)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: $(resourceGroupName)
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_template.json'
-    csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
-    deploymentMode: 'Incremental'
+  - script: |
+      tar -czf airbyte.tar.gz airbyte
+      tar -czf kafka.tar.gz kafka
+      tar -czf airflow.tar.gz airflow
+      tar -czf mlflow.tar.gz mlflow
+    displayName: 'Compress Folders'
+  
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airbyte.tar.gz --name airbyte.tar.gz --overwrite true
+        az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file kafka.tar.gz --name kafka.tar.gz --overwrite true
+        az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airflow.tar.gz --name airflow.tar.gz --overwrite true
+        az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file mlflow.tar.gz --name mlflow.tar.gz --overwrite true
+    displayName: 'Upload tar.gz files to Azure Blob Storage'
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy Azure ML Studio Workspace and dependencies'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_parameters.json'
+      deploymentMode: 'Incremental'
+      
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy Azure Blob Storage'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_parameters.json'
+      deploymentMode: 'Incremental'
+      
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy Kafka with its infrastructure'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra/kafka_infra_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra/kafka_infra_parameters.json'
+      deploymentMode: 'Incremental'
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy Airbyte with its infrastructure'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra/airbyte_infra_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra/airbyte_infra_parameters.json'
+      deploymentMode: 'Incremental'
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy MLflow with its infrastructure'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra/mlflow_infra_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra/mlflow_infra_parameters.json'
+      deploymentMode: 'Incremental'
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy Airflow with its infrastructure'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_infra_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_infra_parameters.json'
+      deploymentMode: 'Incremental'
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy VNet Peering between Airbyte and Kafka'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airbyte_kafka_vnet_peering_parameters.json'
+      deploymentMode: 'Incremental'
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy VNet Peering between Kafka and Airflow'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/kafka_airflow_vnet_peering_parameters.json'
+      deploymentMode: 'Incremental'
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy VNet Peering between Airflow and MLflow'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/vnet_peering_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/vnet_peerings/airflow_mlflow_vnet_peering_parameters.json'
+      deploymentMode: 'Incremental'
+      
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_parameters.json'
+      deploymentMode: 'Incremental'
+      
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy private DNS zone to connect Airflow to Azure Blob Storage'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/private_link_template.json'
+      deploymentMode: 'Incremental'
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: '$(subscriptionId)'
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
+      overrideParameters: '-functionAppName deployment20473'
+      deploymentMode: 'Incremental'
+  
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.10'
+      addToPath: true
+  
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r $(Build.SourcesDirectory)/FunctionAPI/requirements.txt --target="$(Build.SourcesDirectory)/FunctionAPI/.python_packages/lib/site-packages"
+    displayName: 'Install dependencies'
+  
+  - script: |
+      cd $(Build.SourcesDirectory)/FunctionAPI
+      zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
+    displayName: 'Package function app'
+  
+  - task: AzureFunctionApp@2
+    inputs:
+      connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
+      appType: 'functionAppLinux'
+      appName: 'deployment20473'
+      package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
+      runtimeStack: 'PYTHON|3.10'
+      deploymentMethod: 'auto'
+    displayName: 'Deploy to Azure Functions'
+  
+  - task: AzurePowerShell@5
+    displayName: 'Roles assignment'
+    inputs:
+      azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+      ScriptType: 'FilePath'
+      ScriptPath: 'scripts/roles_assignment.ps1'
+      ScriptArguments: '-subscriptionId "$(subscriptionId)" -resourceGroupName "$(resourceGroupName)"'
+      azurePowerShellVersion: 'LatestVersion'
+  
+  - script: |
+      echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
+      sleep 2460
+    displayName: 'Pause Step'
+  
+  - task: AzurePowerShell@5
+    inputs:
+      azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+      ScriptType: 'InlineScript'
+      Inline: |
+        $workspaceName = "mlserving"
+        $resourceGroupName = "$(resourceGroupName)"
+        $workspace = Get-AzResource -ResourceGroupName $resourceGroupName -ResourceType "Microsoft.MachineLearningServices/workspaces" -Name $workspaceName
+        echo "##vso[task.setvariable variable=workspaceId]$($workspace.ResourceId)"
+      azurePowerShellVersion: 'LatestVersion'
+  
+  - task: AzureCLI@2
+    displayName: 'Azure ML Studio Workspace post-deployment configs'
+    inputs:
+      azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        resourceId=$(echo $(workspaceId))     
+        az resource update --ids $resourceId --set properties.publicNetworkAccess=Disabled
+  
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Deploy Private Endpoint from Airflow to Azure ML Studio Workspace'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_template.json'
+      csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
+      deploymentMode: 'Incremental'
 
