@@ -23,7 +23,7 @@ jobs:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install flake8 isort mypy autopep8 black pylint
+      pip install flake8 isort mypy black pylint
     displayName: 'Install Python code quality tools'
 
   - script: |
@@ -37,10 +37,6 @@ jobs:
   - script: |
       mypy . --ignore-missing-imports || echo "Type checking issues"
     displayName: 'Perform type check with mypy'
-
-  - script: |
-      autopep8 . --diff || echo "Code format issues"
-    displayName: 'Check code format with autopep8'
 
   - script: |
       black --check . || echo "Code format issues"
