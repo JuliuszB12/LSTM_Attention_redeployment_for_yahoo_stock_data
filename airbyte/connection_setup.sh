@@ -5,7 +5,7 @@ workspace_id=$(curl -u airbyte:password -X POST http://localhost:8000/api/v1/wor
 -H "Content-Type: application/json" \
 -d '{}' | python3 -c "import sys, json; print(json.load(sys.stdin)['workspaces'][0]['workspaceId'])")
 
-# Create Yahoo Finance Price source with the workspace ID
+# Create Yahoo Finance Price source with the Airbyte workspace ID
 source_id=$(curl -u airbyte:password -X POST http://localhost:8000/api/v1/sources/create \
 -H "Content-Type: application/json" \
 -d '{
@@ -19,7 +19,7 @@ source_id=$(curl -u airbyte:password -X POST http://localhost:8000/api/v1/source
     "name": "Yahoo source"
 }' | python3 -c "import sys, json; print(json.load(sys.stdin)['sourceId'])")
 
-# Create Kafka destination with the workspace ID
+# Create Kafka destination with the Airbyte workspace ID
 destination_id=$(curl -u airbyte:password -X POST http://localhost:8000/api/v1/destinations/create \
 -H "Content-Type: application/json" \
 -d '{
@@ -55,7 +55,7 @@ destination_id=$(curl -u airbyte:password -X POST http://localhost:8000/api/v1/d
     "name": "Kafka destination"
 }' | python3 -c "import sys, json; print(json.load(sys.stdin)['destinationId'])")
 
-# Create connection between source and destination
+# Create connection between created source and destination
 curl -u airbyte:password -X POST http://localhost:8000/api/v1/connections/create \
 -H "Content-Type: application/json" \
 -d '{
