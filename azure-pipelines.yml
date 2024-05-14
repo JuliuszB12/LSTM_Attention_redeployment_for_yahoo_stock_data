@@ -47,7 +47,7 @@ jobs:
     displayName: 'Check code quality with pylint'
 
 - job: Continuous_Deployment
-  timeoutInMinutes: 75
+  timeoutInMinutes: 70
 
   pool:
     vmImage: ubuntu-latest
@@ -290,7 +290,7 @@ jobs:
   
   - script: |
       echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
-      sleep 3000
+      sleep 2820
     displayName: 'Pause Step'
   
   - task: AzurePowerShell@5
