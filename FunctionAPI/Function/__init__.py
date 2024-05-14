@@ -22,7 +22,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     service = AksWebservice(ws, 'lstm-service')
     response = service.run(input_data=inputs)
 
-    if name:
+    if response:
         return func.HttpResponse(response, status_code=200)
     else:
         return func.HttpResponse("Please pass input in the request body", status_code=400)
