@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test56789010101010'
+  resourceGroupName: 'rocket_test16789010101010'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -253,6 +253,15 @@ steps:
   displayName: 'Deploy to Azure Functions'
 
 - task: AzurePowerShell@5
+  displayName: 'Roles assignment'
+  inputs:
+    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+    ScriptType: 'FilePath'
+    ScriptPath: 'scripts/roles_assignment.ps1'
+    ScriptArguments: '-subscriptionId "$(subscriptionId)" -resourceGroupName "$(resourceGroupName)"'
+    azurePowerShellVersion: 'LatestVersion'
+
+- task: AzurePowerShell@5
   inputs:
     azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
     ScriptType: 'InlineScript'
@@ -271,15 +280,6 @@ steps:
     inlineScript: |
       resourceId=$(echo $(workspaceId))     
       az resource update --ids $resourceId --set properties.networkSettings.allowInternetOutbound=Allow
-
-- task: AzurePowerShell@5
-  displayName: 'Roles assignment'
-  inputs:
-    azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
-    ScriptType: 'FilePath'
-    ScriptPath: 'scripts/roles_assignment.ps1'
-    ScriptArguments: '-subscriptionId "$(subscriptionId)" -resourceGroupName "$(resourceGroupName)"'
-    azurePowerShellVersion: 'LatestVersion'
 
 - script: |
     echo "Waiting for AKS cluster and real-time inference endpoint initial deployment..."
