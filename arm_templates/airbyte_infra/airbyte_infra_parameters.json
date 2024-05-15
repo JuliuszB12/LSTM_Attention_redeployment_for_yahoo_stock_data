@@ -10,5 +10,8 @@
     },
     "tempStorageAccountName": {
       "value": "tobeoverwritteninazppl"
+    },
+    "tempContainerName": {
+      "value": "configs"
     }
 }
