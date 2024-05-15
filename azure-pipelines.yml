@@ -3,10 +3,10 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test24680'
+  resourceGroupName: 'rocket_test24691'
   location: 'East US'
-  functionAppName: '$(resourceGroupName)2xa4'
-  tempStorageAccountName: '$(resourceGroupName)1qe3'
+  functionAppName: '2xa4$(resourceGroupName)'
+  tempStorageAccountName: '1qe3$(resourceGroupName)'
   tempContainerName: 'configs'
 
 stages:
@@ -15,7 +15,6 @@ stages:
     - job: Continuous_Integration
       pool:
         vmImage: ubuntu-latest
-      steps:
       - task: UsePythonVersion@0
         inputs:
           versionSpec: '3.10'
@@ -53,6 +52,18 @@ stages:
       pool:
         vmImage: ubuntu-latest 
       steps:
+      - powershell: |
+          $tempStorageAccountName = "$(tempStorageAccountName)".ToLower() -replace '[^a-z0-9]', ''
+          $tempStorageAccountName = $tempStorageAccountName.Substring(0, [System.Math]::Min($tempStorageAccountName.Length, 24))
+          Write-Host "##vso[task.setvariable variable=tempStorageAccountName]$tempStorageAccountName"
+        displayName: 'Assign value to tempStorageAccount pipeline variable'
+
+      - powershell: |
+          $functionAppName = "$(functionAppName)".ToLower() -replace '[^a-z0-9]', ''
+          $functionAppName = $functionAppName.Substring(0, [System.Math]::Min($functionAppName.Length, 24))
+          Write-Host "##vso[task.setvariable variable=functionAppName]$functionAppName"
+        displayName: 'Assign value to functionAppName pipeline variable'
+
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy temporary Azure Blob Storage'
         inputs:
@@ -67,7 +78,7 @@ stages:
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_parameters.json'
           overrideParameters: '-storageAccountName "$(tempStorageAccountName)" -containerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
-    
+
       - script: |
           tar -czf airbyte.tar.gz airbyte
           tar -czf kafka.tar.gz kafka
