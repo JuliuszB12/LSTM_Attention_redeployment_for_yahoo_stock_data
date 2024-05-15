@@ -64,7 +64,15 @@
                         {
                             "name": "WEBSITE_CONTENTSHARE",
                             "value": "[concat(parameters('name'), 'ba17')]"
-                        }
+                        },
+                        {
+                            "name": "subscriptionId",
+                            "value": "[variables('subscriptionId')]"
+                        },
+                        {
+                            "name": "resourceGroup",
+                            "value": "[variables('resourceGroup')]"
+                        }                        
                     ],
                     "cors": {
                         "allowedOrigins": [
