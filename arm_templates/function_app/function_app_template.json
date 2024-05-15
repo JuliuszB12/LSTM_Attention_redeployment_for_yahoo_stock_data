@@ -76,7 +76,7 @@
                     "linuxFxVersion": "[variables('linuxFxVersion')]"
                 },
                 "clientAffinityEnabled": false,
-                "virtualNetworkSubnetId": "[resourceId('rocket_test001', 'Microsoft.Network/virtualNetworks/subnets', 'airflow-vnet', 'functionapp')]",
+                "virtualNetworkSubnetId": "[resourceId(variables('resourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', variables('vNetName'), 'functionapp')]",
                 "publicNetworkAccess": "Disabled",
                 "vnetRouteAllEnabled": true,
                 "httpsOnly": true,
