@@ -2,62 +2,47 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "functionAppName": {
+        "name": {
             "type": "String"
-        },
-        "use32BitWorkerProcess": {
-            "type": "Bool"
-        },
-        "ftpsState": {
-            "type": "String"
-        },
-        "linuxFxVersion": {
-            "type": "String"
-        },
-        "sku": {
-            "type": "String"
-        },
-        "skuCode": {
-            "type": "String"
-        },
-        "workerSize": {
-            "type": "String"
-        },
-        "workerSizeId": {
-            "type": "String"
-        },
-        "numberOfWorkers": {
-            "type": "String"
-        },
-        "alwaysOn": {
-            "type": "Bool"
         }
     },
     "variables": {
         "resourceGroup": "[resourceGroup().name]",
         "location": "[resourceGroup().location]",
         "subscriptionId": "[subscription().subscriptionId]",
-        "APPLICATIONINSIGHTS_CONNECTION_STRING_resourceName": "[concat('microsoft.insights/components/', parameters('functionAppName'))]",
-        "storageAccountName": "[concat(parameters('functionAppName'), 'ae05')]",
-        "hostingPlanName": "[concat('ASP-', parameters('functionAppName'), '-8eba')]"
+        "vNetName": "airflow-vnet",
+        "subnetName": "functionapp",
+        "outboundSubnetDeployment": "outboundSubnetDeployment",
+        "storageAccountName": "[concat(parameters('name'), '81dc')]",
+        "hostingPlanName": "[concat('ASP-', parameters('name'), '-be98')]",
+        "use32BitWorkerProcess": false,
+        "ftpsState": "FtpsOnly",
+        "linuxFxVersion": "Python|3.10",
+        "sku": "ElasticPremium",
+        "skuCode": "EP1",
+        "workerSize": "3",
+        "workerSizeId": "3",
+        "numberOfWorkers": "1",
+        "alwaysOn": false
     },
     "resources": [
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2022-03-01",
-            "name": "[parameters('functionAppName')]",
+            "name": "[parameters('name')]",
             "location": "[variables('location')]",
             "dependsOn": [
-                "[concat('microsoft.insights/components/', parameters('functionAppName'))]",
                 "[concat('Microsoft.Web/serverfarms/', variables('hostingPlanName'))]",
-                "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "[variables('outboundSubnetDeployment')]"
             ],
-            "tags": {
-                "hidden-link: /app-insights-resource-id": "[concat('/subscriptions/', variables('subscriptionId'), '/resourcegroups/', variables('resourceGroup'), '/providers/Microsoft.Insights/components/', parameters('functionAppName'))]"
-            },
+            "tags": {},
             "kind": "functionapp,linux",
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "properties": {
-                "name": "[parameters('functionAppName')]",
+                "name": "[parameters('name')]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -69,10 +54,6 @@
                             "value": "python"
                         },
                         {
-                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference(variables('APPLICATIONINSIGHTS_CONNECTION_STRING_resourceName'), '2015-05-01').ConnectionString]"
-                        },
-                        {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
                         },
@@ -82,7 +63,7 @@
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
-                            "value": "test52346962f"
+                            "value": "[concat(parameters('name'), 'ba17')]"
                         }
                     ],
                     "cors": {
@@ -90,13 +71,14 @@
                             "https://portal.azure.com"
                         ]
                     },
-                    "use32BitWorkerProcess": "[parameters('use32BitWorkerProcess')]",
-                    "ftpsState": "[parameters('ftpsState')]",
-                    "linuxFxVersion": "[parameters('linuxFxVersion')]"
+                    "use32BitWorkerProcess": "[variables('use32BitWorkerProcess')]",
+                    "ftpsState": "[variables('ftpsState')]",
+                    "linuxFxVersion": "[variables('linuxFxVersion')]"
                 },
                 "clientAffinityEnabled": false,
-                "virtualNetworkSubnetId": null,
-                "publicNetworkAccess": "Enabled",
+                "virtualNetworkSubnetId": "[resourceId('rocket_test001', 'Microsoft.Network/virtualNetworks/subnets', 'airflow-vnet', 'functionapp')]",
+                "publicNetworkAccess": "Disabled",
+                "vnetRouteAllEnabled": true,
                 "httpsOnly": true,
                 "serverFarmId": "[concat('/subscriptions/', variables('subscriptionId'),'/resourcegroups/', variables('resourceGroup'), '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
             },
@@ -104,9 +86,9 @@
                 {
                     "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
                     "apiVersion": "2022-09-01",
-                    "name": "[concat(parameters('functionAppName'), '/scm')]",
+                    "name": "[concat(parameters('name'), '/scm')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/Sites', parameters('functionAppName'))]"
+                        "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
                     ],
                     "properties": {
                         "allow": false
@@ -115,9 +97,9 @@
                 {
                     "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
                     "apiVersion": "2022-09-01",
-                    "name": "[concat(parameters('functionAppName'), '/ftp')]",
+                    "name": "[concat(parameters('name'), '/ftp')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/Sites', parameters('functionAppName'))]"
+                        "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
                     ],
                     "properties": {
                         "allow": false
@@ -131,40 +113,72 @@
             "name": "[variables('hostingPlanName')]",
             "location": "[variables('location')]",
             "dependsOn": [],
+            "tags": {},
             "sku": {
-                "Tier": "[parameters('sku')]",
-                "Name": "[parameters('skuCode')]"
+                "Tier": "[variables('sku')]",
+                "Name": "[variables('skuCode')]"
             },
             "kind": "linux",
             "properties": {
                 "name": "[variables('hostingPlanName')]",
-                "workerSize": "[parameters('workerSize')]",
-                "workerSizeId": "[parameters('workerSizeId')]",
-                "numberOfWorkers": "[parameters('numberOfWorkers')]",
-                "reserved": true
+                "workerSize": "[variables('workerSize')]",
+                "workerSizeId": "[variables('workerSizeId')]",
+                "numberOfWorkers": "[variables('numberOfWorkers')]",
+                "reserved": true,
+                "maximumElasticWorkerCount": "20",
+                "zoneRedundant": false
             }
         },
         {
-            "type": "microsoft.insights/components",
-            "apiVersion": "2020-02-02-preview",
-            "name": "[parameters('functionAppName')]",
-            "location": "[variables('location')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-07-01",
+            "name": "[variables('outboundSubnetDeployment')]",
             "dependsOn": [],
             "properties": {
-                "ApplicationId": "[parameters('functionAppName')]",
-                "Request_Source": "IbizaWebAppExtensionCreate",
-                "Flow_Type": "Redfield",
-                "Application_Type": "web"
-            }
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                            "apiVersion": "2020-07-01",
+                            "name": "[concat(variables('vNetName'), '/', variables('subnetName'))]",
+                            "properties": {
+                                "delegations": [
+                                    {
+                                        "name": "delegation",
+                                        "properties": {
+                                            "serviceName": "Microsoft.Web/serverfarms"
+                                        }
+                                    }
+                                ],
+                                "serviceEndpoints": [
+                                    {
+                                        "service": "Microsoft.Storage"
+                                    }
+                                ],
+                                "addressPrefix": "10.3.1.0/24"
+                            }
+                        }
+                    ]
+                }
+            },
+            "subscriptionId": "[variables('subscriptionId')]",
+            "resourceGroup": "[variables('resourceGroup')]"
         },
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2022-05-01",
             "name": "[variables('storageAccountName')]",
             "location": "[variables('location')]",
+            "tags": {},
             "sku": {
                 "name": "Standard_LRS"
             },
+            "kind": "StorageV2",
             "properties": {
                 "supportsHttpsTrafficOnly": true,
                 "minimumTlsVersion": "TLS1_2",
