@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test005'
+  resourceGroupName: 'rocket_test007'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -99,7 +99,7 @@ stages:
           csmFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_template.json'
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlstudio/azureml_parameters.json'
           deploymentMode: 'Incremental'
-          
+
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Azure Blob Storage'
         inputs:
@@ -113,7 +113,7 @@ stages:
           csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_template.json'
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_parameters.json'
           deploymentMode: 'Incremental'
-          
+
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Kafka with its infrastructure'
         inputs:
