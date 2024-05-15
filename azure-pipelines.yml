@@ -3,9 +3,10 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test1239045'
+  resourceGroupName: 'rocket_test24680'
   location: 'East US'
-  tempStorageAccountName: 'configswasalreadytaken'
+  functionAppName: '$(resourceGroupName)2xa4'
+  tempStorageAccountName: '$(resourceGroupName)1qe3'
   tempContainerName: 'configs'
 
 stages:
@@ -126,6 +127,7 @@ stages:
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra/kafka_infra_template.json'
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/kafka_infra/kafka_infra_parameters.json'
+          overrideParameters: '-tempStorageAccountName "$(tempStorageAccountName)" -tempContainerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
       
       - task: AzureResourceManagerTemplateDeployment@3
@@ -140,6 +142,7 @@ stages:
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra/airbyte_infra_template.json'
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airbyte_infra/airbyte_infra_parameters.json'
+          overrideParameters: '-tempStorageAccountName "$(tempStorageAccountName)" -tempContainerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
       
       - task: AzureResourceManagerTemplateDeployment@3
@@ -154,6 +157,7 @@ stages:
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra/mlflow_infra_template.json'
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/mlflow_infra/mlflow_infra_parameters.json'
+          overrideParameters: '-tempStorageAccountName "$(tempStorageAccountName)" -tempContainerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
       
       - task: AzureResourceManagerTemplateDeployment@3
@@ -168,6 +172,7 @@ stages:
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_infra_template.json'
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_infra_parameters.json'
+          overrideParameters: '-tempStorageAccountName "$(tempStorageAccountName)" -tempContainerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
       
       - task: AzureResourceManagerTemplateDeployment@3
@@ -265,7 +270,7 @@ stages:
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
-          overrideParameters: '-name deployment20473'
+          overrideParameters: '-name "$(functionAppName)"'
           deploymentMode: 'Incremental'
       
       - task: UsePythonVersion@0
@@ -288,7 +293,7 @@ stages:
         inputs:
           connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
           appType: 'functionAppLinux'
-          appName: 'deployment20473'
+          appName: $(functionAppName)
           package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
           runtimeStack: 'PYTHON|3.10'
           deploymentMethod: 'auto'
