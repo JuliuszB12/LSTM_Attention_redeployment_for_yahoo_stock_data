@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test71420'
+  resourceGroupName: 'rocket_test1239045'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -213,6 +213,20 @@ stages:
           deploymentMode: 'Incremental'
 
       - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          subscriptionId: $(subscriptionId)
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: $(resourceGroupName)
+          location: $(location)
+          templateLocation: 'Linked artifact'
+          csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_template.json'
+          csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_parameters.json'
+          deploymentMode: 'Incremental'
+
+      - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Private Endpoint from Airflow to Azure ML Studio Workspace'
         inputs:
           deploymentScope: 'Resource Group'
@@ -226,20 +240,6 @@ stages:
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_parameters.json'
           deploymentMode: 'Incremental'
 
-      - task: AzureResourceManagerTemplateDeployment@3
-        displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
-        inputs:
-          deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-          subscriptionId: $(subscriptionId)
-          action: 'Create Or Update Resource Group'
-          resourceGroupName: $(resourceGroupName)
-          location: $(location)
-          templateLocation: 'Linked artifact'
-          csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_template.json'
-          csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_storage_private_endpoint_parameters.json'
-          deploymentMode: 'Incremental'
-          
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy private DNS zone to connect Airflow to Azure Blob Storage'
         inputs:
