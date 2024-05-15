@@ -56,7 +56,7 @@ stages:
           $tempStorageAccountName = "$(tempStorageAccountName)".ToLower() -replace '[^a-z0-9]', ''
           $tempStorageAccountName = $tempStorageAccountName.Substring(0, [System.Math]::Min($tempStorageAccountName.Length, 24))
           Write-Host "##vso[task.setvariable variable=tempStorageAccountName]$tempStorageAccountName"
-        displayName: 'Assign value to tempStorageAccount pipeline variable'
+        displayName: 'Assign value to tempStorageAccountName pipeline variable'
 
       - powershell: |
           $functionAppName = "$(functionAppName)".ToLower() -replace '[^a-z0-9]', ''
