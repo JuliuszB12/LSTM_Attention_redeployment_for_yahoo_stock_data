@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test24679'
+  resourceGroupName: 'rocket_test127'
   location: 'East US'
   functionAppName: '2xa4$(resourceGroupName)'
   tempStorageAccountName: '1qe3$(resourceGroupName)'
@@ -316,6 +316,6 @@ stages:
           azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
           ScriptType: 'FilePath'
           ScriptPath: 'scripts/roles_assignment.ps1'
-          ScriptArguments: '-subscriptionId "$(subscriptionId)" -resourceGroupName "$(resourceGroupName)"'
+          ScriptArguments: '-resourceGroupName "$(resourceGroupName)" -functionAppName "$(functionAppName)"'
           azurePowerShellVersion: 'LatestVersion'
 
