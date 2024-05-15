@@ -85,7 +85,7 @@
                 },
                 "clientAffinityEnabled": false,
                 "virtualNetworkSubnetId": "[resourceId(variables('resourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', variables('vNetName'), 'functionapp')]",
-                "publicNetworkAccess": "Disabled",
+                "publicNetworkAccess": "Enabled",
                 "vnetRouteAllEnabled": true,
                 "httpsOnly": true,
                 "serverFarmId": "[concat('/subscriptions/', variables('subscriptionId'),'/resourcegroups/', variables('resourceGroup'), '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
