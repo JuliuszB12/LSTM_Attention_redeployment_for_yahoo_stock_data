@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test24670'
+  resourceGroupName: 'rocket_test24675'
   location: 'East US'
   functionAppName: '2xa4$(resourceGroupName)'
   tempStorageAccountName: '1qe3$(resourceGroupName)'
@@ -57,13 +57,13 @@ stages:
           $tsan = "$(tempStorageAccountName)".ToLower() -replace '[^a-z0-9]', ''
           $tsan = $tsan.Substring(0, [System.Math]::Min($tsan.Length, 24))
           Write-Host "##vso[task.setvariable variable=tempStorageAccountName]$tsan"
-      displayName: 'Assign value to tempStorageAccountName pipeline variable'
+        displayName: 'Assign value to tempStorageAccountName pipeline variable'
 
       - powershell: |
           $fan = "$(functionAppName)".ToLower() -replace '[^a-z0-9]', ''
           $fan = $fan.Substring(0, [System.Math]::Min($fan.Length, 24))
           Write-Host "##vso[task.setvariable variable=functionAppName]$fan"
-      displayName: 'Assign value to functionAppName pipeline variable'
+        displayName: 'Assign value to functionAppName pipeline variable'
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy temporary Azure Blob Storage'
