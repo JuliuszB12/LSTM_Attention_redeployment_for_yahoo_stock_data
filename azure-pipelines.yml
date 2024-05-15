@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test24675'
+  resourceGroupName: 'rocket_test24679'
   location: 'East US'
   functionAppName: '2xa4$(resourceGroupName)'
   tempStorageAccountName: '1qe3$(resourceGroupName)'
