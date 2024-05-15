@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket_test12401'
+  resourceGroupName: 'rocket_test15401'
   location: 'East US'
   tempStorageAccountName: 'configswasalreadytaken'
   tempContainerName: 'configs'
@@ -265,7 +265,7 @@ stages:
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
-          overrideParameters: '-functionAppName deployment20473'
+          overrideParameters: '-name deployment20473'
           deploymentMode: 'Incremental'
       
       - task: UsePythonVersion@0
