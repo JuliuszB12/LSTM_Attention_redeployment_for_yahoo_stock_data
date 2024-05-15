@@ -19,6 +19,9 @@
       "metadata": {
         "description": "Temporary storage for deployment files."
       }
+    },
+    "tempContainerName": {
+      "type": "string",
     }
   },
   "variables": {
@@ -145,7 +148,7 @@
     "typeHandlerVersion": "2.1",
     "autoUpgradeMinorVersion": true,
     "settings": {
-      "commandToExecute": "[concat('bash -c \"export HOME=/home/', parameters('adminUsername'), ' && cd $HOME && wget https://', parameters('tempStorageAccountName'), '.blob.core.windows.net/configs/mlflow.tar.gz -O mlflow.tar.gz && tar -xzvf mlflow.tar.gz && cd mlflow && chmod +x setup.sh && ./setup.sh &\"')]"
+      "commandToExecute": "[concat('bash -c \"export HOME=/home/', parameters('adminUsername'), ' && cd $HOME && wget https://', parameters('tempStorageAccountName'), '.blob.core.windows.net/', parameters('tempContainerName'), '/mlflow.tar.gz -O mlflow.tar.gz && tar -xzvf mlflow.tar.gz && cd mlflow && chmod +x setup.sh && ./setup.sh &\"')]"
     }
   }
 }
