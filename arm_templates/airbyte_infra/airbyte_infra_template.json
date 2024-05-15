@@ -13,6 +13,12 @@
       "metadata": {
         "description": "Password for the virtual machine."
       }
+    },
+    "tempStorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Temporary storage for deployment files."
+      }
     }
   },
   "variables": {
@@ -139,7 +145,7 @@
     "typeHandlerVersion": "2.1",
     "autoUpgradeMinorVersion": true,
     "settings": {
-      "commandToExecute": "[concat('bash -c \"export HOME=/home/', parameters('adminUsername'), ' && cd $HOME && wget https://configswasalreadytaken.blob.core.windows.net/configs/airbyte.tar.gz -O airbyte.tar.gz && tar -xzvf airbyte.tar.gz && cd airbyte && chmod +x setup.sh && ./setup.sh &\"')]"
+      "commandToExecute": "[concat('bash -c \"export HOME=/home/', parameters('adminUsername'), ' && cd $HOME && wget https://', parameters('tempStorageAccountName'), '.blob.core.windows.net/configs/airbyte.tar.gz -O airbyte.tar.gz && tar -xzvf airbyte.tar.gz && cd airbyte && chmod +x setup.sh && ./setup.sh &\"')]"
     }
   }
 }
