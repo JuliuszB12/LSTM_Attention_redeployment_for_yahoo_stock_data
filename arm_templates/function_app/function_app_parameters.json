@@ -2,35 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "functionAppName": {
-            "value": "deployment20473"
-        },
-        "use32BitWorkerProcess": {
-            "value": false
-        },
-        "ftpsState": {
-            "value": "FtpsOnly"
-        },
-        "linuxFxVersion": {
-            "value": "Python|3.10"
-        },
-        "sku": {
-            "value": "Dynamic"
-        },
-        "skuCode": {
-            "value": "Y1"
-        },
-        "workerSize": {
-            "value": "0"
-        },
-        "workerSizeId": {
-            "value": "0"
-        },
-        "numberOfWorkers": {
-            "value": "1"
-        },
-        "alwaysOn": {
-            "value": false
+        "name": {
+            "value": "deployment20475"
         }
     }
 }
