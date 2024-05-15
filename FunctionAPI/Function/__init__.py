@@ -1,3 +1,4 @@
+import os
 import azure.functions as func
 from azureml.core.authentication import MsiAuthentication
 from azureml.core.webservice import AksWebservice
@@ -13,10 +14,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse("Invalid JSON", status_code=400)
 
     inputs = req_body.get('inputs')
-
+    
+    subscriptionId = os.getenv('subscriptionId')
+    resourceGroup = os.getenv('resourceGroup')
     msi_auth = MsiAuthentication()
-    ws = Workspace(subscription_id="38ca6696-5c82-4571-b2af-bf3f256cf663", 
-                   resource_group="rocket_test784192", 
+    ws = Workspace(subscription_id=subscriptionId, 
+                   resource_group=resourceGroup, 
                    workspace_name="mlserving", 
                    auth=msi_auth)
     service = AksWebservice(ws, 'lstm-service')
