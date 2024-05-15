@@ -1,11 +1,10 @@
 param (
-    [string]$subscriptionId,
-    [string]$resourceGroupName
+    [string]$resourceGroupName,
+    [string]$functionAppName
 )
 
 $vmName = "airflow"
 $storageAccountName = "kafkastockdata1"
-$functionAppName = "deployment20473"
 $amlWorkspaceName = "mlserving"
 $vm = Get-AzVM -ResourceGroupName $resourceGroupName -Name $vmName
 $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
