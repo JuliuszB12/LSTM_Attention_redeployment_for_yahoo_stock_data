@@ -16,7 +16,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     msi_auth = MsiAuthentication()
     ws = Workspace(subscription_id="38ca6696-5c82-4571-b2af-bf3f256cf663", 
-                   resource_group="rocket_test001", 
+                   resource_group="rocket_test003", 
                    workspace_name="mlserving", 
                    auth=msi_auth)
     service = AksWebservice(ws, 'lstm-service')
