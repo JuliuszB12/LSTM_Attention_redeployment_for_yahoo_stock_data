@@ -3,11 +3,8 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rocket-test131'
-  location: 'East US'
-  functionAppName: '2xa4$(resourceGroupName)'
-  tempStorageAccountName: '1qe3$(resourceGroupName)'
-  tempContainerName: 'configs'
+  resourceGroupName: 'rockettest131'  # note that it will be parsed to max 16 lowercase alphanumeric chars anyway
+  location: 'East US'  # changing this should be considered very carefully (check supported functionalities and assigned compute quotas)
 
 stages:
   - stage: Continuous_Integration
@@ -46,6 +43,23 @@ stages:
           pylint . || echo "Code quality issues"
         displayName: 'Check code quality with pylint'
 
+      - script: |
+          python -m pip install --upgrade pip
+          pip install -r $(Build.SourcesDirectory)/FunctionAPI/requirements.txt --target="$(Build.SourcesDirectory)/FunctionAPI/.python_packages/lib/site-packages"
+        displayName: 'Install dependencies'
+
+      - script: |
+          cd $(Build.SourcesDirectory)/FunctionAPI
+          zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
+        displayName: 'Package function app'
+
+      - script: |
+          tar -czf airbyte.tar.gz airbyte
+          tar -czf kafka.tar.gz kafka
+          tar -czf airflow.tar.gz airflow
+          tar -czf mlflow.tar.gz mlflow
+        displayName: 'Compress Folders'
+
   - stage: Continuous_Deployment
     jobs:
     - job: Continuous_Deployment
@@ -54,14 +68,20 @@ stages:
         vmImage: ubuntu-latest 
       steps:
       - powershell: |
-          $tsan = "$(tempStorageAccountName)".ToLower() -replace '[^a-z0-9]', ''
-          $tsan = $tsan.Substring(0, [System.Math]::Min($tsan.Length, 24))
-          Write-Host "##vso[task.setvariable variable=tempStorageAccountName]$tsan"
-        displayName: 'Assign parsed value to tempStorageAccountName pipeline variable'
+          $rgn = "$(resourceGroupName)".ToLower() -replace '[^a-z0-9]', ''
+          $rgn = $rgn.Substring(0, [System.Math]::Min($rgn.Length, 16))
+          Write-Host "##vso[task.setvariable variable=resourceGroupName]$rgn"
+        displayName: 'Assign parsed value to resourceGroupName pipeline variable'
 
       - powershell: |
-          $fan = "$(functionAppName)".ToLower() -replace '[^a-z0-9]', ''
-          $fan = $fan.Substring(0, [System.Math]::Min($fan.Length, 24))
+          $tsan = "1qe3p" + "$(resourceGroupName)"
+          $tcn = "configs"
+          Write-Host "##vso[task.setvariable variable=tempStorageAccountName]$tsan"
+          Write-Host "##vso[task.setvariable variable=tempContainerName]$tcn"
+        displayName: 'Assign parsed value to tempStorageAccountName and tempContainerName pipeline variables'
+
+      - powershell: |
+          $fan = "2xa4c" + "$(resourceGroupName)"
           Write-Host "##vso[task.setvariable variable=functionAppName]$fan"
         displayName: 'Assign parsed value to functionAppName pipeline variable'
 
@@ -80,15 +100,8 @@ stages:
           overrideParameters: '-storageAccountName "$(tempStorageAccountName)" -containerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
 
-      - script: |
-          tar -czf airbyte.tar.gz airbyte
-          tar -czf kafka.tar.gz kafka
-          tar -czf airflow.tar.gz airflow
-          tar -czf mlflow.tar.gz mlflow
-        displayName: 'Compress Folders'
-      
       - task: AzureCLI@2
-        displayName: 'Upload tar.gz files to Azure Blob Storage'  
+        displayName: 'Upload tar.gz files to temporary storage'  
         inputs:
           azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
           scriptType: 'bash'
@@ -309,22 +322,7 @@ stages:
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
           overrideParameters: '-name "$(functionAppName)"'
           deploymentMode: 'Incremental'
-      
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '3.10'
-          addToPath: true
-      
-      - script: |
-          python -m pip install --upgrade pip
-          pip install -r $(Build.SourcesDirectory)/FunctionAPI/requirements.txt --target="$(Build.SourcesDirectory)/FunctionAPI/.python_packages/lib/site-packages"
-        displayName: 'Install dependencies'
-      
-      - script: |
-          cd $(Build.SourcesDirectory)/FunctionAPI
-          zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
-        displayName: 'Package function app'
-      
+
       - task: AzureFunctionApp@2
         displayName: 'Deploy to Azure Functions'  
         inputs:
