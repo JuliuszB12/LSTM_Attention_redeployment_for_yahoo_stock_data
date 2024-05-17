@@ -30,7 +30,7 @@
         },
         "privateLinkServiceConnections": [
           {
-            "name": "myAmlPrivateLinkServiceConnection",
+            "name": "[concat('myAmlPrivateLink', parameters('vnetName'))]",
             "properties": {
               "privateLinkServiceId": "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('amlWorkspaceName'))]",
               "groupIds": ["amlworkspace"],
