@@ -51,7 +51,7 @@ stages:
       - script: |
           cd $(Build.SourcesDirectory)/function_api/function_app
           zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
-        displayName: 'Package function app'
+        displayName: 'Package function for Function App'
 
       - script: |
           mkdir -p $(Build.ArtifactStagingDirectory)/services
