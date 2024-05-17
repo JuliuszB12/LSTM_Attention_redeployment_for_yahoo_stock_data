@@ -348,6 +348,47 @@ stages:
           runtimeStack: 'PYTHON|3.10'
           deploymentMethod: 'auto'
 
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Deploy Virtual Network for Function App'
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          subscriptionId: $(subscriptionId)
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: $(resourceGroupName)
+          location: $(location)
+          templateLocation: 'Linked artifact'
+          csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/functionapp_vnet_template.json'
+          deploymentMode: 'Incremental'
+
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Deploy Private Endpoint from Function App to Azure ML Studio Workspace'
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          subscriptionId: $(subscriptionId)
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: $(resourceGroupName)
+          location: $(location)
+          templateLocation: 'Linked artifact'
+          csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/airflow_mlstudio_private_endpoint_template.json'
+          csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_azureml_private_endpoint_parameters.json'
+          deploymentMode: 'Incremental'
+
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Deploy private DNS zone to connect Function App to Azure ML Studio Workspace'
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          subscriptionId: $(subscriptionId)
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: $(resourceGroupName)
+          location: $(location)
+          templateLocation: 'Linked artifact'
+          csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_azureml_private_link_template.json'
+          overrideParameters: '-mlworkspaceId "$(workspaceId)"'
+          deploymentMode: 'Incremental'
+
       - task: AzurePowerShell@5
         displayName: 'Roles assignment'
         inputs:
