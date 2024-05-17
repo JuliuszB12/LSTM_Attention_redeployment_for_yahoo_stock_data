@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest131'  # note that it will be parsed to max 16 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest141'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
   location: 'East US'  # changing this should be considered very carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -60,6 +60,10 @@ stages:
           tar -czf mlflow.tar.gz mlflow
         displayName: 'Compress Folders'
 
+      - publish: $(System.DefaultWorkingDirectory)
+        artifact: CompressedFiles
+        displayName: 'Publish Compressed Files'
+
   - stage: Continuous_Deployment
     jobs:
     - job: Continuous_Deployment
@@ -69,7 +73,7 @@ stages:
       steps:
       - powershell: |
           $rgn = "$(resourceGroupName)".ToLower() -replace '[^a-z0-9]', ''
-          $rgn = $rgn.Substring(0, [System.Math]::Min($rgn.Length, 16))
+          $rgn = $rgn.Substring(0, [System.Math]::Min($rgn.Length, 15))
           Write-Host "##vso[task.setvariable variable=resourceGroupName]$rgn"
         displayName: 'Assign parsed value to resourceGroupName pipeline variable'
 
@@ -99,6 +103,10 @@ stages:
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_parameters.json'
           overrideParameters: '-storageAccountName "$(tempStorageAccountName)" -containerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
+
+      - download: current
+        artifact: CompressedFiles
+        displayName: 'Download Compressed Files'
 
       - task: AzureCLI@2
         displayName: 'Upload tar.gz files to temporary storage'  
