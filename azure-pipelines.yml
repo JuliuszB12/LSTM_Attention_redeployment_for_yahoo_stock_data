@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest142'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest143'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
   location: 'East US'  # changing this should be considered very carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -53,6 +53,10 @@ stages:
           zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
         displayName: 'Package function app'
 
+      - publish: $(Build.ArtifactStagingDirectory)/functionapp.zip
+        artifact: FunctionAppArtifact
+        displayName: 'Publish Function App Artifact'
+
   - stage: Continuous_Deployment
     jobs:
     - job: Continuous_Deployment
@@ -60,6 +64,9 @@ stages:
       pool:
         vmImage: ubuntu-latest 
       steps:
+      - download: current
+        artifact: FunctionAppArtifact
+
       - powershell: |
           $rgn = "$(resourceGroupName)".ToLower() -replace '[^a-z0-9]', ''
           $rgn = $rgn.Substring(0, [System.Math]::Min($rgn.Length, 15))
@@ -133,7 +140,7 @@ stages:
           connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
           appType: 'functionAppLinux'
           appName: $(functionAppName)
-          package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
+          package: '$(Pipeline.Workspace)/FunctionAppArtifact/functionapp.zip'
           runtimeStack: 'PYTHON|3.10'
           deploymentMethod: 'auto'
 
