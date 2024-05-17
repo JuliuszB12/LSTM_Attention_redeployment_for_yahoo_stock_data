@@ -3,8 +3,8 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest54'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
-  location: 'East US'  # changing this should be considered very carefully (check supported functionalities and assigned compute quotas)
+  resourceGroupName: 'rockettest12453'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
+  location: 'Poland Central'  # changing this should be considered carefully (check supported functionalities and assigned compute quotas)
 
 stages:
   - stage: Continuous_Integration
