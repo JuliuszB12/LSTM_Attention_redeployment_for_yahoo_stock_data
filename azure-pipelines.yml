@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest12453'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest12454'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
   location: 'Poland Central'  # changing this should be considered carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -84,7 +84,7 @@ stages:
 
       - powershell: |
           $rgn = "$(resourceGroupName)".ToLower() -replace '[^a-z0-9]', ''
-          $rgn = $rgn.Substring(0, [System.Math]::Min($rgn.Length, 15))
+          $rgn = $rgn.Substring(0, [System.Math]::Min($rgn.Length, 19))
           Write-Host "##vso[task.setvariable variable=resourceGroupName]$rgn"
         displayName: 'Assign parsed value to resourceGroupName pipeline variable'
 
