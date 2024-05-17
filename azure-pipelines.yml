@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest375'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest385'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
   location: 'East US'  # changing this should be considered very carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -53,9 +53,20 @@ stages:
           zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
         displayName: 'Package function app'
 
+      - script: |
+          tar -czf $(Build.ArtifactStagingDirectory)/services/airbyte.tar.gz airbyte
+          tar -czf $(Build.ArtifactStagingDirectory)/services/kafka.tar.gz kafka
+          tar -czf $(Build.ArtifactStagingDirectory)/services/airflow.tar.gz airflow
+          tar -czf $(Build.ArtifactStagingDirectory)/services/mlflow.tar.gz mlflow
+        displayName: 'Compress folders'
+
       - publish: $(Build.ArtifactStagingDirectory)/functionapp.zip
         artifact: FunctionAppArtifact
         displayName: 'Publish Function App Artifact'
+
+      - publish: $(Build.ArtifactStagingDirectory)/services
+        artifact: CompressedFolders
+        displayName: 'Publish compressed folders'
 
   - stage: Continuous_Deployment
     jobs:
@@ -66,6 +77,9 @@ stages:
       steps:
       - download: current
         artifact: FunctionAppArtifact
+
+      - download: current
+        artifact: CompressedFolders
 
       - powershell: |
           $rgn = "$(resourceGroupName)".ToLower() -replace '[^a-z0-9]', ''
@@ -100,13 +114,6 @@ stages:
           overrideParameters: '-storageAccountName "$(tempStorageAccountName)" -containerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
 
-      - script: |
-          tar -czf airbyte.tar.gz airbyte
-          tar -czf kafka.tar.gz kafka
-          tar -czf airflow.tar.gz airflow
-          tar -czf mlflow.tar.gz mlflow
-        displayName: 'Compress Folders'
-
       - task: AzureCLI@2
         displayName: 'Upload tar.gz files to temporary storage'  
         inputs:
@@ -114,10 +121,10 @@ stages:
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airbyte.tar.gz --name airbyte.tar.gz --overwrite true
-            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file kafka.tar.gz --name kafka.tar.gz --overwrite true
-            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airflow.tar.gz --name airflow.tar.gz --overwrite true
-            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file mlflow.tar.gz --name mlflow.tar.gz --overwrite true
+            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/services/airbyte.tar.gz --name airbyte.tar.gz --overwrite true
+            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/services/kafka.tar.gz --name kafka.tar.gz --overwrite true
+            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/services/airflow.tar.gz --name airflow.tar.gz --overwrite true
+            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/services/mlflow.tar.gz --name mlflow.tar.gz --overwrite true
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Azure ML Studio Workspace and dependencies'
