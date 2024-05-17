@@ -84,7 +84,7 @@
                     "linuxFxVersion": "[variables('linuxFxVersion')]"
                 },
                 "clientAffinityEnabled": false,
-                "virtualNetworkSubnetId": "[resourceId(variables('resourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', variables('vNetName'), 'functionapp')]",
+                "virtualNetworkSubnetId": "[resourceId(variables('resourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', variables('vNetName'), variables('subnetName'))]",
                 "publicNetworkAccess": "Enabled",
                 "vnetRouteAllEnabled": true,
                 "httpsOnly": true,
@@ -168,7 +168,7 @@
                                         "service": "Microsoft.Storage"
                                     }
                                 ],
-                                "addressPrefix": "10.3.1.0/24"
+                                "addressPrefix": "10.5.0.0/24"
                             }
                         }
                     ]
