@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest385'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest405'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
   location: 'East US'  # changing this should be considered very carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -54,6 +54,7 @@ stages:
         displayName: 'Package function app'
 
       - script: |
+          mkdir -p $(Build.ArtifactStagingDirectory)/services
           tar -czf $(Build.ArtifactStagingDirectory)/services/airbyte.tar.gz airbyte
           tar -czf $(Build.ArtifactStagingDirectory)/services/kafka.tar.gz kafka
           tar -czf $(Build.ArtifactStagingDirectory)/services/airflow.tar.gz airflow
