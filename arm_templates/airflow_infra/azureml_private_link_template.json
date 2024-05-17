@@ -97,7 +97,7 @@
         {
             "type": "Microsoft.Network/privateDnsZones/A",
             "apiVersion": "2018-09-01",
-            "name": "[concat(variables('privateDnsZones_privatelink_notebooks_azure_net_name'), '/ml-', variables('resourceGroup'), '-', variables('location'), '-', parameters('mlworkspaceId'), '.', variables('location'))]",
+            "name": "[concat(variables('privateDnsZones_privatelink_notebooks_azure_net_name'), '/ml-', variables('resourceGroup'), '-', parameters('mlworkspaceId'), '.', variables('location'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZones_privatelink_notebooks_azure_net_name'))]"
             ],
