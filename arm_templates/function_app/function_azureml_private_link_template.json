@@ -9,6 +9,7 @@
     "variables": {
         "resourceGroup": "[resourceGroup().name]",
         "subscriptionId": "[subscription().subscriptionId]",
+        "location": "[resourceGroup().location]",
         "vNetName": "function-vnet",
         "privateDnsZones_privatelink_api_azureml_ms_name": "privatelink1.api.azureml.ms",
         "privateDnsZones_privatelink_notebooks_azure_net_name": "privatelink1.notebooks.azure.net",
@@ -48,7 +49,7 @@
         {
             "type": "Microsoft.Network/privateDnsZones/A",
             "apiVersion": "2018-09-01",
-            "name": "[concat(variables('privateDnsZones_privatelink_api_azureml_ms_name'), '/*.', parameters('mlworkspaceId'), '.inference.eastus')]",
+            "name": "[concat(variables('privateDnsZones_privatelink_api_azureml_ms_name'), '/*.', parameters('mlworkspaceId'), '.inference.', variables('location'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZones_privatelink_api_azureml_ms_name'))]"
             ],
@@ -64,7 +65,7 @@
         {
             "type": "Microsoft.Network/privateDnsZones/A",
             "apiVersion": "2018-09-01",
-            "name": "[concat(variables('privateDnsZones_privatelink_api_azureml_ms_name'), '/', parameters('mlworkspaceId'), '.workspace.eastus')]",
+            "name": "[concat(variables('privateDnsZones_privatelink_api_azureml_ms_name'), '/', parameters('mlworkspaceId'), '.workspace.', variables('location'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZones_privatelink_api_azureml_ms_name'))]"
             ],
@@ -80,7 +81,7 @@
         {
             "type": "Microsoft.Network/privateDnsZones/A",
             "apiVersion": "2018-09-01",
-            "name": "[concat(variables('privateDnsZones_privatelink_api_azureml_ms_name'), '/', parameters('mlworkspaceId'), '.workspace.eastus.cert')]",
+            "name": "[concat(variables('privateDnsZones_privatelink_api_azureml_ms_name'), '/', parameters('mlworkspaceId'), '.workspace.', variables('location'), '.cert')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZones_privatelink_api_azureml_ms_name'))]"
             ],
@@ -96,7 +97,7 @@
         {
             "type": "Microsoft.Network/privateDnsZones/A",
             "apiVersion": "2018-09-01",
-            "name": "[concat(variables('privateDnsZones_privatelink_notebooks_azure_net_name'), '/ml-', variables('resourceGroup'), '-eastus-', parameters('mlworkspaceId'), '.eastus')]",
+            "name": "[concat(variables('privateDnsZones_privatelink_notebooks_azure_net_name'), '/ml-', variables('resourceGroup'), '-', variables('location'), '-', parameters('mlworkspaceId'), '.', variables('location'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZones_privatelink_notebooks_azure_net_name'))]"
             ],
