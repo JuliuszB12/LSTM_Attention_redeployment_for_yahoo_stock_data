@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest355'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest375'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
   location: 'East US'  # changing this should be considered very carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -118,31 +118,6 @@ stages:
             az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file kafka.tar.gz --name kafka.tar.gz --overwrite true
             az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file airflow.tar.gz --name airflow.tar.gz --overwrite true
             az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file mlflow.tar.gz --name mlflow.tar.gz --overwrite true
-
-      - task: AzureResourceManagerTemplateDeployment@3
-        displayName: 'Deploy Azure Function App'   
-        inputs:
-          deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
-          subscriptionId: '$(subscriptionId)'
-          action: 'Create Or Update Resource Group'
-          resourceGroupName: $(resourceGroupName)
-          location: $(location)
-          templateLocation: 'Linked artifact'
-          csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
-          csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
-          overrideParameters: '-name "$(functionAppName)"'
-          deploymentMode: 'Incremental'
-
-      - task: AzureFunctionApp@2
-        displayName: 'Deploy to Azure Functions'  
-        inputs:
-          connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
-          appType: 'functionAppLinux'
-          appName: $(functionAppName)
-          package: '$(Pipeline.Workspace)/FunctionAppArtifact/functionapp.zip'
-          runtimeStack: 'PYTHON|3.10'
-          deploymentMethod: 'auto'
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Azure ML Studio Workspace and dependencies'
@@ -339,6 +314,31 @@ stages:
           csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/azureml_private_link_template.json'
           overrideParameters: '-mlworkspaceId "$(workspaceId)"'
           deploymentMode: 'Incremental'
+
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Deploy Azure Function App'   
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          subscriptionId: '$(subscriptionId)'
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: $(resourceGroupName)
+          location: $(location)
+          templateLocation: 'Linked artifact'
+          csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
+          csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
+          overrideParameters: '-name "$(functionAppName)"'
+          deploymentMode: 'Incremental'
+
+      - task: AzureFunctionApp@2
+        displayName: 'Deploy to Azure Functions'  
+        inputs:
+          connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
+          appType: 'functionAppLinux'
+          appName: $(functionAppName)
+          package: '$(Pipeline.Workspace)/FunctionAppArtifact/functionapp.zip'
+          runtimeStack: 'PYTHON|3.10'
+          deploymentMethod: 'auto'
 
       - task: AzurePowerShell@5
         displayName: 'Roles assignment'
