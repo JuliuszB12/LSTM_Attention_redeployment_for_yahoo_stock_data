@@ -94,7 +94,7 @@ def deploy_azureml_task(**kwargs) -> None:
         try:
             aks_target = ws.compute_targets['lstm-aks-cluster']
         except:
-            prov_config = AksCompute.provisioning_configuration(location='eastus')
+            prov_config = AksCompute.provisioning_configuration(location='polandcentral')
             aks_target = ComputeTarget.create(workspace=ws, name='lstm-aks-cluster', provisioning_configuration=prov_config)
             aks_target.wait_for_completion(show_output=True)
 
