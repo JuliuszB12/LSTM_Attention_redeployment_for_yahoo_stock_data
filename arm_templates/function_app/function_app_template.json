@@ -11,7 +11,7 @@
         "location": "[resourceGroup().location]",
         "subscriptionId": "[subscription().subscriptionId]",
         "vNetName": "function-vnet",
-        "subnetName": "default",
+        "subnetName": "functionapp",
         "outboundSubnetDeployment": "outboundSubnetDeployment",
         "storageAccountName": "[concat(parameters('name'), '81dc')]",
         "hostingPlanName": "[concat('ASP-', parameters('name'), '-be98')]",
@@ -168,7 +168,7 @@
                                         "service": "Microsoft.Storage"
                                     }
                                 ],
-                                "addressPrefix": "10.5.0.0/24"
+                                "addressPrefix": "10.5.1.0/24"
                             }
                         }
                     ]
