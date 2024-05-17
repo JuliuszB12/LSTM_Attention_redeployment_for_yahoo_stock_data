@@ -46,7 +46,7 @@ stages:
       - script: |
           python -m pip install --upgrade pip
           pip install -r $(Build.SourcesDirectory)/function_api/function_app/requirements.txt --target="$(Build.SourcesDirectory)/function_api/function_app/.python_packages/lib/site-packages"
-        displayName: 'Install dependencies'
+        displayName: 'Install dependencies for function app'
 
       - script: |
           cd $(Build.SourcesDirectory)/function_api/function_app
