@@ -45,11 +45,11 @@ stages:
 
       - script: |
           python -m pip install --upgrade pip
-          pip install -r $(Build.SourcesDirectory)/FunctionAPI/requirements.txt --target="$(Build.SourcesDirectory)/FunctionAPI/.python_packages/lib/site-packages"
+          pip install -r $(Build.SourcesDirectory)/function_api/function_app/requirements.txt --target="$(Build.SourcesDirectory)/function_api/function_app/.python_packages/lib/site-packages"
         displayName: 'Install dependencies'
 
       - script: |
-          cd $(Build.SourcesDirectory)/FunctionAPI
+          cd $(Build.SourcesDirectory)/function_api/function_app
           zip -r $(Build.ArtifactStagingDirectory)/functionapp.zip .
         displayName: 'Package function app'
 
@@ -339,7 +339,7 @@ stages:
           deploymentMode: 'Incremental'
 
       - task: AzureFunctionApp@2
-        displayName: 'Deploy to Azure Functions'  
+        displayName: 'Deploy packed function to Azure Function App'  
         inputs:
           connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
           appType: 'functionAppLinux'
