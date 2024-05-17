@@ -298,6 +298,31 @@ stages:
           csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/blob_storage_private_link_template.json'
           deploymentMode: 'Incremental'
 
+      - task: AzurePowerShell@5
+        displayName: 'Assign Azure ML Workspace ID to pipeline variable'
+        inputs:
+          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+          ScriptType: 'InlineScript'
+          Inline: |
+            $workspace = Get-AzResource -ResourceGroupName "$(resourceGroupName)" -ResourceType "Microsoft.MachineLearningServices/workspaces" -Name "mlserving"
+            $wid = $workspace.Properties.workspaceId
+            Write-Host "##vso[task.setvariable variable=workspaceId]$wid"
+          azurePowerShellVersion: 'Latest'
+
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Deploy private DNS zone to connect Airflow to Azure ML Studio Workspace'
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          subscriptionId: $(subscriptionId)
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: $(resourceGroupName)
+          location: $(location)
+          templateLocation: 'Linked artifact'
+          csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/azureml_private_link_template.json'
+          overrideParameters: '-mlworkspaceId "$(workspaceId)"'
+          deploymentMode: 'Incremental'
+
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Virtual Network for Function App'
         inputs:
@@ -350,19 +375,8 @@ stages:
           csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_azureml_private_endpoint_parameters.json'
           deploymentMode: 'Incremental'
 
-      - task: AzurePowerShell@5
-        displayName: 'Assign Azure ML Workspace ID to pipeline variable'
-        inputs:
-          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
-          ScriptType: 'InlineScript'
-          Inline: |
-            $workspace = Get-AzResource -ResourceGroupName "$(resourceGroupName)" -ResourceType "Microsoft.MachineLearningServices/workspaces" -Name "mlserving"
-            $wid = $workspace.Properties.workspaceId
-            Write-Host "##vso[task.setvariable variable=workspaceId]$wid"
-          azurePowerShellVersion: 'Latest'
-
       - task: AzureResourceManagerTemplateDeployment@3
-        displayName: 'Deploy private DNS zone to connect Airflow and Function App to Azure ML Studio Workspace'
+        displayName: 'Deploy private DNS zone to connect Function App to Azure ML Studio Workspace'
         inputs:
           deploymentScope: 'Resource Group'
           azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
@@ -371,7 +385,7 @@ stages:
           resourceGroupName: $(resourceGroupName)
           location: $(location)
           templateLocation: 'Linked artifact'
-          csmFile: '$(Build.SourcesDirectory)/arm_templates/airflow_infra/azureml_private_link_template.json'
+          csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_azureml_private_link_template.json'
           overrideParameters: '-mlworkspaceId "$(workspaceId)"'
           deploymentMode: 'Incremental'
 
