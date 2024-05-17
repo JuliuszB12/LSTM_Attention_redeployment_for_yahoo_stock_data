@@ -11,8 +11,8 @@
         "subscriptionId": "[subscription().subscriptionId]",
         "location": "[resourceGroup().location]",
         "vNetName": "function-vnet",
-        "privateDnsZones_privatelink_api_azureml_ms_name": "privatelink1.api.azureml.ms",
-        "privateDnsZones_privatelink_notebooks_azure_net_name": "privatelink1.notebooks.azure.net",
+        "privateDnsZones_privatelink_api_azureml_ms_name": "privatelink.api.azureml.ms",
+        "privateDnsZones_privatelink_notebooks_azure_net_name": "privatelink.notebooks.azure.net",
         "virtualNetworks_function_vnet_externalid": "[concat('/subscriptions/', variables('subscriptionId'), '/resourceGroups/', variables('resourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', variables('vNetName'))]"
     },
     "resources": [
