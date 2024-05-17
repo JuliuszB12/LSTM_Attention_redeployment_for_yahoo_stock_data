@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest417'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest450'  # note that it will be parsed to max 15 lowercase alphanumeric chars anyway
   location: 'East US'  # changing this should be considered very carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -82,11 +82,6 @@ stages:
       - download: current
         artifact: CompressedFolders
 
-      - script: |
-          echo "Checking directory contents..."
-          ls -l $(Pipeline.Workspace)/CompressedFolders/
-        displayName: 'List contents of the services directory'
-
       - powershell: |
           $rgn = "$(resourceGroupName)".ToLower() -replace '[^a-z0-9]', ''
           $rgn = $rgn.Substring(0, [System.Math]::Min($rgn.Length, 15))
@@ -127,10 +122,10 @@ stages:
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/services/airbyte.tar.gz --name airbyte.tar.gz --overwrite true
-            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/services/kafka.tar.gz --name kafka.tar.gz --overwrite true
-            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/services/airflow.tar.gz --name airflow.tar.gz --overwrite true
-            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/services/mlflow.tar.gz --name mlflow.tar.gz --overwrite true
+            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/airbyte.tar.gz --name airbyte.tar.gz --overwrite true
+            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/kafka.tar.gz --name kafka.tar.gz --overwrite true
+            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/airflow.tar.gz --name airflow.tar.gz --overwrite true
+            az storage blob upload --account-name $(tempStorageAccountName) --container-name $(tempContainerName) --file $(Pipeline.Workspace)/CompressedFolders/mlflow.tar.gz --name mlflow.tar.gz --overwrite true
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Azure ML Studio Workspace and dependencies'
