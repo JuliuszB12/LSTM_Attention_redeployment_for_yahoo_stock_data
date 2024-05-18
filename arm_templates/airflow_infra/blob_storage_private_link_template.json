@@ -4,7 +4,7 @@
     "parameters": {},
     "variables": {
         "privateDnsZonesName": "privatelink.blob.core.windows.net",
-        "storageAccountName": "[concat('3de90', resourceGroup().name)]"
+        "storageAccountName": "[concat('3de90', resourceGroup().name)]",
         "virtualNetworkExternalID": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/airflow-vnet')]"
     },
     "resources": [
