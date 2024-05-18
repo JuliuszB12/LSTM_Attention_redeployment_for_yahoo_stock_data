@@ -16,9 +16,10 @@ def preprocess_data(sequence_length: int, read_blob: Callable[[str], pd.DataFram
     """
     | Params:\n
     | sequence_length - length of LSTM time series\n
+    | read_blob - function returning Pandas DataFrame from Azure Blob Storage data\n
     | tickers - list of tickers for stock data\n
-    | connect_str - connection string for Azure Blob Storage\n
-    container_name - n ame of container in Azure Blob Storage
+    | account_name - name of Azure Blob Storage Account\n
+    container_name - name of container in Azure Blob Storage
     """
     df = read_blob(account_name, container_name)
     df = df.rename(columns={'timestamp': 'date'})
