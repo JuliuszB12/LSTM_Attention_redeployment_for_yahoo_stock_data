@@ -1,7 +1,7 @@
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
-from custom_operators.custom_functions_azure import train_model_task, deploy_azureml_task
+from custom_operators.custom_functions_model import train_model_task, deploy_azureml_task
 
 
 default_args = {
