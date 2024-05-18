@@ -11,7 +11,7 @@ from azureml.core.model import InferenceConfig
 from azureml.core.webservice import AksWebservice
 from azureml.core.compute import AksCompute, ComputeTarget
 from azureml.core.conda_dependencies import CondaDependencies
-from .azure_utils import tickers, read_blob, auth_ws_register_model, container_data
+from .azure_utils import tickers, read_blob, auth_ws_register_model, account_name, container_data
 from .model_utils import preprocess_data, build_model, model_name
 from .mlflow_utils import compare_and_update_production_stage
 
@@ -28,7 +28,7 @@ def train_model_task() -> str:
     unit_number = 50
 
     model = build_model((32, 12), unit_number)
-    x, y, scaler, y_scaler = preprocess_data(32, read_blob, tickers, container_data)
+    x, y, scaler, y_scaler = preprocess_data(32, read_blob, tickers, account_name, container_data)
     x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.2, random_state=42)
     history = model.fit(x_train, y_train, epochs=30, batch_size=16, validation_data=(x_val, y_val))
 
