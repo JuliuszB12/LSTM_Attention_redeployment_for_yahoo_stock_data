@@ -10,11 +10,6 @@ from azureml.core import Model, Workspace
 import mlflow
 from mlflow.tracking import MlflowClient
 
-tickers = ['AMZN', 'AXP']
-_, resource_group = get_azure_vm_metadata()
-account_name = '3de90' + resource_group
-container_data = "kafkadata"
-
 
 def read_blob(container_name: str) -> pd.DataFrame:
     """
@@ -102,3 +97,9 @@ def get_azure_vm_metadata() -> tuple[str, str]:
         return subscription_id, resource_group
     else:
         return "Failed to retrieve metadata", response.status_code
+
+
+tickers = ['AMZN', 'AXP']
+_, resource_group = get_azure_vm_metadata()
+account_name = '3de90' + resource_group
+container_data = "kafkadata"
