@@ -4,7 +4,7 @@ param (
 )
 
 $vmName = "airflow"
-$storageAccountName = "kafkastockdata1"
+$storageAccountName = "3de90" + $resourceGroupName
 $amlWorkspaceName = "mlserving"
 $vm = Get-AzVM -ResourceGroupName $resourceGroupName -Name $vmName
 $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
