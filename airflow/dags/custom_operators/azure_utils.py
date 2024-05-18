@@ -11,8 +11,9 @@ import mlflow
 from mlflow.tracking import MlflowClient
 
 tickers = ['AMZN', 'AXP']
-account_name = 'kafkastockdata1'
-container_data = "kafka-data3"
+_, resource_group = get_azure_vm_metadata()
+account_name = '3de90' + resource_group
+container_data = "kafkadata"
 
 
 def read_blob(container_name: str) -> pd.DataFrame:
