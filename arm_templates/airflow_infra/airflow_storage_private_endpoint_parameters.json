@@ -8,9 +8,6 @@
     "subnetName": {
       "value": "default"
     },
-    "storageAccountName": {
-      "value": "kafkastockdata1"
-    },
     "privateEndpointName": {
       "value": "airflow-storage"
     }
