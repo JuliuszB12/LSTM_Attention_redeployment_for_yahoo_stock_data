@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest21854'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest12093'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
   location: 'Poland Central'  # changing this should be considered carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -96,6 +96,13 @@ stages:
         displayName: 'Assign parsed value to tempStorageAccountName and tempContainerName pipeline variables'
 
       - powershell: |
+          $san = "3de90" + "$(resourceGroupName)"
+          $cn = "configs"
+          Write-Host "##vso[task.setvariable variable=storageAccountName]$san"
+          Write-Host "##vso[task.setvariable variable=containerName]$cn"
+        displayName: 'Assign parsed value to storageAccountName and containerName pipeline variables'
+
+      - powershell: |
           $fan = "2xa4c" + "$(resourceGroupName)"
           Write-Host "##vso[task.setvariable variable=functionAppName]$fan"
         displayName: 'Assign parsed value to functionAppName pipeline variable'
@@ -111,7 +118,6 @@ stages:
           location: $(location)
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_template.json'
-          csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/temp_blob_storage_parameters.json'
           overrideParameters: '-storageAccountName "$(tempStorageAccountName)" -containerName "$(tempContainerName)"'
           deploymentMode: 'Incremental'
 
@@ -152,7 +158,7 @@ stages:
           location: $(location)
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_template.json'
-          csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/blob_storage/blob_storage_parameters.json'
+          overrideParameters: '-storageAccountName "$(storageAccountName)" -containerName "$(containerName)"'
           deploymentMode: 'Incremental'
 
       - task: AzureResourceManagerTemplateDeployment@3
