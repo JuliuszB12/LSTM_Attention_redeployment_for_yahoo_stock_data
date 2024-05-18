@@ -7,12 +7,6 @@
     },
     "adminPassword": {
       "value": "Mlflow11@"
-    },
-    "tempStorageAccountName": {
-      "value": "tobeoverwritteninazppl"
-    },
-    "tempContainerName": {
-      "value": "configs"
     }
   }
 }
