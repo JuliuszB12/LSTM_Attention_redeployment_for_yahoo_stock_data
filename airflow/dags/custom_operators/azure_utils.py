@@ -11,7 +11,7 @@ import mlflow
 from mlflow.tracking import MlflowClient
 
 
-def read_blob(container_name: str) -> pd.DataFrame:
+def read_blob(account_name: str, container_name: str) -> pd.DataFrame:
     """
     Read blob data from Azure Blob Storage container
     """
