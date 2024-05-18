@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest12093'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest12005'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
   location: 'Poland Central'  # changing this should be considered carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -353,7 +353,6 @@ stages:
           location: $(location)
           templateLocation: 'Linked artifact'
           csmFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_template.json'
-          csmParametersFile: '$(Build.SourcesDirectory)/arm_templates/function_app/function_app_parameters.json'
           overrideParameters: '-name "$(functionAppName)"'
           deploymentMode: 'Incremental'
 
