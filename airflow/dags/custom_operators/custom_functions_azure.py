@@ -75,7 +75,7 @@ def deploy_azureml_task(**kwargs) -> None:
     controller = ti.xcom_pull(task_ids='train_model_task')
     if controller == 'old_version':
         pass
-    elif controller == 'new_model':
+    elif (controller == 'new_model') | (controller == 'new_version'):
         # Auth to Azure ML Workspace and register production version of trained model
         ws, model = auth_ws_register_model(model_name)
 
@@ -97,32 +97,6 @@ def deploy_azureml_task(**kwargs) -> None:
             prov_config = AksCompute.provisioning_configuration(location='polandcentral')
             aks_target = ComputeTarget.create(workspace=ws, name='lstm-aks-cluster', provisioning_configuration=prov_config)
             aks_target.wait_for_completion(show_output=True)
-
-        # Deploy model to AKS target
-        service = Model.deploy(workspace=ws,
-                               name='lstm-service',
-                               models=[model],
-                               inference_config=inference_config,
-                               deployment_config=deployment_config,
-                               deployment_target=aks_target)
-        service.wait_for_deployment(show_output=True)
-    elif controller == 'new_version':
-        # Auth to Azure ML Workspace and register production version of trained model
-        ws, model = auth_ws_register_model(model_name)
-
-        # Create conda environment for score.py
-        env = Environment('my-env')
-        cd = CondaDependencies.create(pip_packages=['mlflow==2.12.1', 'azureml-defaults', 'numpy==1.23.5', 
-                                                    'scikit-learn==1.4.2', 'tensorflow==2.15.1'],
-                                      python_version='3.10')
-        env.python.conda_dependencies = cd
-
-        # Create an inference configuration
-        inference_config = InferenceConfig(entry_script='score.py', environment=env)
-
-        # set AKS deployment configuration
-        deployment_config = AksWebservice.deploy_configuration(cpu_cores=1, memory_gb=1)
-        aks_target = ws.compute_targets['lstm-aks-cluster']
 
         # Deploy model to AKS target
         service = Model.deploy(workspace=ws,
