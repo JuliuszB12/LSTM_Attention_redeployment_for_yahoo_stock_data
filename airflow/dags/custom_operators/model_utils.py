@@ -10,8 +10,9 @@ from tensorflow.keras.models import Model
 model_name = "LSTM_Attention_stock_price_regression"
 
 
-def preprocess_data(sequence_length: int, read_blob: Callable[[str], pd.DataFrame], tickers: str, container_name: str) \
-        -> tuple[np.ndarray[np.ndarray[np.ndarray[np.float64]]], np.ndarray[np.float64], MinMaxScaler, MinMaxScaler]:
+def preprocess_data(sequence_length: int, read_blob: Callable[[str], pd.DataFrame],  tickers: str, account_name: str, 
+                    container_name: str) -> \
+        tuple[np.ndarray[np.ndarray[np.ndarray[np.float64]]], np.ndarray[np.float64], MinMaxScaler, MinMaxScaler]:
     """
     | Params:\n
     | sequence_length - length of LSTM time series\n
@@ -19,7 +20,7 @@ def preprocess_data(sequence_length: int, read_blob: Callable[[str], pd.DataFram
     | connect_str - connection string for Azure Blob Storage\n
     container_name - n ame of container in Azure Blob Storage
     """
-    df = read_blob(container_name)
+    df = read_blob(account_name, container_name)
     df = df.rename(columns={'timestamp': 'date'})
     df = pd.get_dummies(df, columns=['symbol'], prefix='', prefix_sep='')
     df[tickers] = df[tickers].astype(int)
