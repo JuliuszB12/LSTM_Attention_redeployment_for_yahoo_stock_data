@@ -7,12 +7,6 @@
     },
     "adminPassword": {
       "value": "Airflow1@"
-    },
-    "tempStorageAccountName": {
-      "value": "tobeoverwritteninazppl"
-    },
-    "tempContainerName": {
-      "value": "configs"
     }
   }
 }
