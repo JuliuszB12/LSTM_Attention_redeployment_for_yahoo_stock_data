@@ -10,7 +10,7 @@ from tensorflow.keras.models import Model
 model_name = "LSTM_Attention_stock_price_regression"
 
 
-def preprocess_data(sequence_length: int, read_blob: Callable[[str], pd.DataFrame],  tickers: str, account_name: str, 
+def preprocess_data(sequence_length: int, read_blob: Callable[[str], pd.DataFrame],  tickers: list[str], account_name: str, 
                     container_name: str) -> \
         tuple[np.ndarray[np.ndarray[np.ndarray[np.float64]]], np.ndarray[np.float64], MinMaxScaler, MinMaxScaler]:
     """
