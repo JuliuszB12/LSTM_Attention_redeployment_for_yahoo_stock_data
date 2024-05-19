@@ -15,7 +15,7 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 3. Go Pipelines -> Pipelines -> Create Pipeline -> GitHub -> choose repo with project -> azure-pipelines.yaml in repo will be automatically identified
 4. Set Azure Subscription ID and name for new resource group in azure-pipelines.yaml
 5. Go Azure Portal -> Subscriptions -> choose subscription -> Access control (IAM) -> Add role assignment -> Privileged administrator roles -> User Access Administrator -> select service principal of Azure DevOps project -> set recommended setting in Conditions tab -> Review + assign
-6. Run pipeline and wait for completion
+6. Run pipeline and wait for completion (around 50 minutes)
 7. Project is operational. API call to ht<span>tps://</span>a1l45&lt;resourceGroupName&gt;.azure-api.net/function/ will success after enough time to collect some data, train and initially deploy the first version of a model (around 70 minutes).
 
 
@@ -67,12 +67,29 @@ the use of global variables in this file is imposed by Azure documentation
 **mlflow**  
 &emsp;- setup.sh - script to deploy MLflow docker containers  
   
-**FunctionAPI**  
-&emsp;- Function/\_\_init\_\_.py - function to fetch model result from Azure ML Studio endpoint  
-&emsp;- Function/function.json - configuration file for that function  
-&emsp;- host.json - configuration file for Azure Function App  
+**function_api**  
+&emsp;- function_app/function/\_\_init\_\_.py - function to fetch model result from Azure ML Studio endpoint  
+&emsp;- function_app/function/function.json - configuration file for that function  
+&emsp;- function_app/host.json - configuration file for Azure Function App  
+&emsp;- apimanagement.sh - Azure CLI bash commands to deploy API Management service and API for Function App  
   
 **scripts**  
 &emsp;- roles_assignment.ps1 - Roles assignment between Azure services  
   
 **arm_templates** - all Azure Resource Manager templates used by azure-pipelines.yaml for Continuous Deployment
+
+## Infrastructure overview
+**Azure Virtual Machine**: Provides scalable, on-demand computing resources for running applications and workloads in the cloud.  
+**Azure Virtual Network**: Enables secure, isolated, and logically segmented network environments within the Azure cloud.  
+**Azure VNet Peering**: Allows seamless, low-latency connectivity between two Azure Virtual Networks.  
+**Azure Blob Storage Account**: Offers scalable object storage for unstructured data such as documents, media files, and backups.  
+**Azure Machine Learning Studio Workspace**: Provides a collaborative environment for data scientists to build, train, and deploy machine learning models.  
+**Azure Function App**: Enables serverless computing by allowing the execution of event-driven functions without managing infrastructure.  
+**Azure API Management**: Facilitates the creation, management, and security of APIs at scale.  
+**Azure Private Endpoint**: Provides a secure connection to Azure services through a private link, ensuring data remains on the private network.  
+**System-assigned Managed Identity**: Automatically manages credentials for accessing Azure services, providing secure identity and access management for applications.  
+**Airbyte**: An open-source data integration platform for extracting, transforming, and loading data from various sources.  
+**Kafka**: A distributed streaming platform used for building real-time data pipelines and streaming applications, enabling low-latency data transmission and processing.  
+**Airflow**: An open-source workflow management platform for scheduling and monitoring complex data pipelines.  
+**MLflow**: An open-source platform for managing the machine learning lifecycle, including experimentation, reproducibility, and deployment.  
+**Azure Machine Learning real-time inference endpoint on Azure Kubernetes cluster**: Deploys machine learning models to provide real-time predictions via scalable Kubernetes clusters in Azure.
