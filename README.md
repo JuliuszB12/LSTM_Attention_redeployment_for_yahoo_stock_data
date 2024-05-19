@@ -20,7 +20,7 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 
 
 ## Features overview
-Features overview provided by the specific files in the project  
+Overview of the features provided by the specific files in the project  
   
 **azure-pipelines.yaml**  
 &emsp;Continuous Deployment high-level overview:
