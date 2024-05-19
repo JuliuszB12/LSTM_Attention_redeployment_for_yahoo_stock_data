@@ -90,28 +90,28 @@ stages:
         displayName: 'Assign parsed value to resourceGroupName pipeline variable'
 
       - powershell: |
-          $tsan = "1qe3p" + "$(resourceGroupName)"
+          $tsan = "$(resourceGroupName)" + "1qe3p"
           $tcn = "configs"
           Write-Host "##vso[task.setvariable variable=tempStorageAccountName]$tsan"
           Write-Host "##vso[task.setvariable variable=tempContainerName]$tcn"
         displayName: 'Assign parsed value to tempStorageAccountName and tempContainerName pipeline variables'
 
       - powershell: |
-          $san = "3de90" + "$(resourceGroupName)"
+          $san = "$(resourceGroupName)" + "3de90"
           $cn = "kafkadata"
           Write-Host "##vso[task.setvariable variable=storageAccountName]$san"
           Write-Host "##vso[task.setvariable variable=containerName]$cn"
         displayName: 'Assign parsed value to storageAccountName and containerName pipeline variables'
 
       - powershell: |
-          $fan = "2xa4c" + "$(resourceGroupName)"
+          $fan = "$(resourceGroupName)" + "2xa4c"
           Write-Host "##vso[task.setvariable variable=functionAppName]$fan"
         displayName: 'Assign parsed value to functionAppName pipeline variable'
 
       - powershell: |
-          $apim = "a1l45" + "$(resourceGroupName)"
+          $apim = "$(resourceGroupName)" + "a1l45"
           Write-Host "##vso[task.setvariable variable=apiManagementName]$apim"
-        displayName: 'Assign parsed value to functionAppName pipeline variable'
+        displayName: 'Assign parsed value to apiManagementName pipeline variable'
 
       - powershell: |
           $loc = "$(location)"
