@@ -13,7 +13,7 @@
         "vNetName": "function-vnet",
         "subnetName": "functionapp",
         "outboundSubnetDeployment": "outboundSubnetDeployment",
-        "storageAccountName": "[concat(parameters('name'), '81dc')]",
+        "storageAccountName": "[parameters('name')]",
         "hostingPlanName": "[concat('ASP-', parameters('name'), '-be98')]",
         "use32BitWorkerProcess": false,
         "ftpsState": "FtpsOnly",
