@@ -72,7 +72,6 @@ stages:
   - stage: Continuous_Deployment
     jobs:
     - job: Continuous_Deployment
-      timeoutInMinutes: 30 
       pool:
         vmImage: ubuntu-latest 
       steps:
@@ -106,6 +105,17 @@ stages:
           $fan = "2xa4c" + "$(resourceGroupName)"
           Write-Host "##vso[task.setvariable variable=functionAppName]$fan"
         displayName: 'Assign parsed value to functionAppName pipeline variable'
+
+      - powershell: |
+          $apim = "a1l45" + "$(resourceGroupName)"
+          Write-Host "##vso[task.setvariable variable=apiManagementName]$apim"
+        displayName: 'Assign parsed value to functionAppName pipeline variable'
+
+      - powershell: |
+          $loc = "$(location)"
+          $loc = $loc.ToLower() -replace ' ', ''
+          Write-Host "##vso[task.setvariable variable=lowercaseLocation]$loc"
+        displayName: 'Convert location to lowercase and remove spaces'
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy temporary Azure Blob Storage'
@@ -405,3 +415,42 @@ stages:
           ScriptArguments: '-resourceGroupName "$(resourceGroupName)" -functionAppName "$(functionAppName)"'
           azurePowerShellVersion: 'LatestVersion'
 
+      - script: chmod +x apimanagement.sh
+        displayName: 'Make apimanagement.sh executable'
+
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            ./apimanagement.sh $(resourceGroupName) $(lowercaseLocation) $(apiManagementName) $(functionAppName)
+
+      - task: AzurePowerShell@5
+        displayName: 'Roles assignment'
+        inputs:
+          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+          ScriptType: 'InlineScript'
+          Inline: |
+            $apimContext = New-AzApiManagementContext -ResourceGroupName "$(resourceGroupName)" -ServiceName "$(apiManagementName)"
+            $policy = "<policies> " +
+                      "<inbound> " +
+                      "<set-query-parameter name='code' exists-action='override'> " +
+                      "<value>{{FunctionKey}}</value> " +
+                      "</set-query-parameter> " +
+                      "<set-header name='Content-Type' exists-action='override'> " +
+                      "<value>application/json</value> " +
+                      "</set-header> " +
+                      "</inbound> " +
+                      "<backend> " +
+                      "<base /> " +
+                      "</backend> " +
+                      "<outbound> " +
+                      "<base /> " +
+                      "</outbound> " +
+                      "<on-error> " +
+                      "<base /> " +
+                      "</on-error> " +
+                      "</policies>"
+            Set-AzApiManagementPolicy -Context $apimContext -ApiId "function" -Policy $policy
+          azurePowerShellVersion: 'Latest'
