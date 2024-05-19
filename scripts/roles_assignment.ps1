@@ -1,6 +1,6 @@
 param (
     [string]$resourceGroupName,
-    [string]$storageAccountName
+    [string]$storageAccountName,
     [string]$functionAppName
 )
 
