@@ -64,10 +64,10 @@ Overview of the features provided by the specific files in the project
   
 **airflow**  
 &emsp;- dags/kafka_dag.py - Airflow DAG: extract data from kafka, transform it and upload to Azure Blob Storage  
-&emsp;- dags/azure_dag.py - Airflow DAG: extract data from Azure Blob Storage, train new version of machine learning model, fetch production version from MLflow, compare versions, if new version is better swap versions in MLflow and deploy new version to Azure Machine Learning Studio real-time inference endpoint hosted on Azure Kubernetes cluster  
+&emsp;- dags/model_dag.py - Airflow DAG: extract data from Azure Blob Storage, train new version of machine learning model, fetch production version from MLflow, compare versions, if new version is better swap versions in MLflow and deploy new version to Azure Machine Learning Studio real-time inference endpoint hosted on Azure Kubernetes cluster  
 &emsp;- dags/custom_operators/custom_functions_kafka.py - functions for PythonOperator tasks in kafka_dag.py  
-&emsp;- dags/custom_operators/custom_functions_azure.py - functions for PythonOperator tasks in azure_dag.py  
-&emsp;- Custom dependencies for custom_functions_kafka.py and custom_functions_azure.py:  
+&emsp;- dags/custom_operators/custom_functions_model.py - functions for PythonOperator tasks in azure_dag.py  
+&emsp;- Custom dependencies for custom_functions_kafka.py and custom_functions_model.py:  
 &emsp;&emsp;&ensp;dags/custom_operators/azure_utils  
 &emsp;&emsp;&ensp;dags/custom_operators/model_utils  
 &emsp;&emsp;&ensp;dags/custom_operators/mlflow_utils  
@@ -86,6 +86,7 @@ the use of global variables in this file is imposed by Azure documentation
 &emsp;- function_app/function/function.json - configuration file for that function  
 &emsp;- function_app/host.json - configuration file for Azure Function App  
 &emsp;- apimanagement.sh - Azure CLI bash commands to deploy API Management service and API for Function App  
+&emsp;- example_api_call/example_api_call.py - example post request with test data to the ready API after successful deployment  
   
 **scripts**  
 &emsp;- roles_assignment.ps1 - Roles assignment between Azure services  
