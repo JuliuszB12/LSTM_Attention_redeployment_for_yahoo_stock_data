@@ -77,7 +77,7 @@ def deploy_azureml_task(**kwargs) -> None:
         pass
     elif (controller == 'new_model') | (controller == 'new_version'):
         # Auth to Azure ML Workspace and register production version of trained model
-        ws, model = auth_ws_register_model(model_name)
+        ws, model = auth_ws_register_model(model_name, tickers)
 
         # Create conda environment for score.py
         env = Environment('my-env')
