@@ -59,7 +59,7 @@ def read_blob(account_name: str, container_name: str) -> pd.DataFrame:
         print(f"An error occurred: {e}")
 
 
-def auth_ws_register_model(model_name: str) -> tuple[Workspace, Model]:
+def auth_ws_register_model(model_name: str, tickers: list[str]) -> tuple[Workspace, Model]:
     # Download mlflow production version of trained model
     mlflow.set_tracking_uri("http://10.4.0.4:5000")
     client = MlflowClient()
@@ -70,6 +70,9 @@ def auth_ws_register_model(model_name: str) -> tuple[Workspace, Model]:
     _ = mlflow.artifacts.download_artifacts(artifact_uri, dst_path=local_path)
     artifact_uri = f'runs:/{prod_version.run_id}/y_scaler.joblib'
     _ = mlflow.artifacts.download_artifacts(artifact_uri, dst_path=local_path)
+    tickers_len = len(tickers)
+    with open(local_path + 'tickers_len.txt', 'w') as file:
+        file.write(str(tickers_len))
 
     # Auth to Azure ML Workspace with System-assigned managed identity
     msi_auth = MsiAuthentication()
