@@ -21,9 +21,10 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 &emsp;NOTE:  
 &emsp;Minimal requirements of the compute quotas allowed on chosen Azure subscription  
 &emsp;to successfully deploy the project with default settings:  
-&emsp;Poland Central Standard Dv2 Family vCPUs 12  
-&emsp;Poland Central Standard Ev4 Family vCPUs 8  
-&emsp;Poland Central Total Regional vCPUs 20
+&emsp;&ensp;Poland Central Standard Dv2 Family vCPUs 12  
+&emsp;&ensp;Poland Central Standard Ev4 Family vCPUs 8  
+&emsp;&ensp;Poland Central Total Regional vCPUs 20  
+&emsp;Estimated cost for default project settings : 2$ per hour
 
 ## Features overview
 Overview of the features provided by the specific files in the project  
