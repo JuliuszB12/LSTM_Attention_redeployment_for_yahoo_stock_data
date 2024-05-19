@@ -101,5 +101,5 @@ def get_azure_vm_metadata() -> tuple[str, str]:
 
 tickers = ['AMZN', 'AXP']
 _, resource_group = get_azure_vm_metadata()
-account_name = '3de90' + resource_group
+account_name = resource_group + '3de90'
 container_data = "kafkadata"
