@@ -67,7 +67,7 @@ stages:
 
       - publish: $(Build.ArtifactStagingDirectory)/services
         artifact: CompressedFolders
-        displayName: 'Publish compressed folders'
+        displayName: 'Publish compressed folders Artifact'
 
   - stage: Continuous_Deployment
     jobs:
@@ -77,9 +77,11 @@ stages:
       steps:
       - download: current
         artifact: FunctionAppArtifact
+        displayName: 'Download Function App Artifact'        
 
       - download: current
         artifact: CompressedFolders
+        displayName: 'Download compressed folders Artifact'        
 
       - powershell: |
           $rgn = "$(resourceGroupName)".ToLower() -replace '[^a-z0-9]', ''
