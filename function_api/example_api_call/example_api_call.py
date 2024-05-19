@@ -12,7 +12,7 @@ body = json.dumps(data)
 
 url = f"https://{resourceGroupName}a1l45.azure-api.net/function/"
 data = {"inputs": body}
-# headers = {"Ocp-Apim-Subscription-Key": ""} # if auth enabled
+# headers = {"Ocp-Apim-Subscription-Key": sys.argv[2]} # if auth enabled
 
 response = requests.post(url, json=data)
 # response = requests.post(url, json=data, headers=headers)
