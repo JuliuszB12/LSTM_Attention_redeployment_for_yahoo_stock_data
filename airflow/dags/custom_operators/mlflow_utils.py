@@ -36,7 +36,6 @@ np.ndarray[np.ndarray[np.ndarray[np.float64]]], y_val: np.ndarray[np.float64]) -
                 return 'new_version'
             else:
                 return 'old_version'
-
     else:
         better_version = get_latest_model_version(model_name, client)
         client.set_registered_model_alias(model_name, "production", better_version)
