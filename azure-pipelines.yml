@@ -415,19 +415,21 @@ stages:
           ScriptArguments: '-resourceGroupName "$(resourceGroupName)" -functionAppName "$(functionAppName)"'
           azurePowerShellVersion: 'LatestVersion'
 
-      - script: chmod +x apimanagement.sh
+      - script: chmod +x function_api/apimanagement.sh
         displayName: 'Make apimanagement.sh executable'
 
       - task: AzureCLI@2
+        displayName: 'Deploy API Management service and API for function app'
         inputs:
           azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
+            cd function_api
             ./apimanagement.sh $(resourceGroupName) $(lowercaseLocation) $(apiManagementName) $(functionAppName)
 
       - task: AzurePowerShell@5
-        displayName: 'Roles assignment'
+        displayName: 'Policy assignment to function API'
         inputs:
           azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
           ScriptType: 'InlineScript'
