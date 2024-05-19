@@ -15,23 +15,25 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 3. Go Pipelines -> Pipelines -> Create Pipeline -> GitHub -> choose repo with project -> azure-pipelines.yaml in repo will be automatically identified
 4. Set Azure Subscription ID and name for new resource group in azure-pipelines.yaml
 5. Go Azure Portal -> Subscriptions -> choose subscription -> Access control (IAM) -> Add role assignment -> Privileged administrator roles -> User Access Administrator -> select service principal of Azure DevOps project -> set recommended setting in Conditions tab -> Review + assign
-6. Run pipeline and wait for completion (around 50 minutes)
-7. Project is operational. API call to ht<span>tps://</span>a1l45&lt;resourceGroupName&gt;.azure-api.net/function/ will success after enough time to collect some data, train and initially deploy the first version of a model (around 70 minutes).
+6. Run pipeline and wait for completion (around 45 minutes)
+7. Project is operational. API call to ht<span>tps://</span>a1l45&lt;resourceGroupName&gt;.azure-api.net/function/ will success after enough time to collect some data, train and initially deploy the first version of a model (around 45 minutes).
 
 
 ## Features overview
 Overview of the features provided by the specific files in the project  
   
 **azure-pipelines.yaml**  
-&emsp;Continuous Deployment high-level overview:
+&emsp;Continuous Integration and Deployment high-level overview:
   - Assign Azure Subscription ID and new resource group name
-  - Checking the quality of Python code with flake8, isort, mypy, black and pylint
+  - Check the quality of Python code with flake8, isort, mypy, black and pylint (Bash)
+  - Pack Azure Function App project and other services utils for deployment (Bash)
+  - Dynamically resolve worldwide unique names for services like Azure Blob Storage, Function App or API Management (PowerShell)
   - Deploy temporary Azure Blob Storage for deployment utils (ARM template)
-  - Compress airbyte, kafka, airflow and mlflow content folders and send it to temporary storage (Bash)
+  - Send airbyte, kafka, airflow and mlflow packed content folders to temporary storage (Bash)
   - Deploy Azure ML Studio Workspace and dependencies (ARM template)
   - Deploy Azure Blob Storage for keeping stock prices data (ARM template)
   - Deploy Kafka with its infrastructure (ARM template + Custom Script Extension)
-  - Deploy Airbyte with its infrastructure (ARM template + Custom Script Extension) and establish yahoo -> kafka connection pipeline (Terraform)
+  - Deploy Airbyte with its infrastructure (ARM template + Custom Script Extension) and establish yahoo -> kafka connection pipeline (Bash)
   - Deploy MLflow with its infrastructure (ARM template + Custom Script Extension)
   - Deploy Airflow with its infrastructure (ARM template + Custom Script Extension) and start DAGs
   - Deploy VNet Peering between Virtual Networks for Airbyte and Kafka infra (ARM template)
@@ -40,10 +42,15 @@ Overview of the features provided by the specific files in the project
   - Deploy Private Endpoint to Azure Blob Storage from Virtual Network for Airflow infra (ARM template)
   - Deploy Private Endpoint to Azure ML Studio Workspace from Virtual Network for Airflow infra (ARM template)
   - Deploy private DNS zone required to connect Airflow infra to Azure Blob Storage (ARM template)
+  - Deploy private DNS zone required to connect Airflow infra to Azure ML Studio Workspace (ARM template)
+  - Deploy Virtual Network for Azure Function App
   - Deploy Azure Function App (ARM template)
-  - Pack function project for deployment (Bash)
-  - Deploy function and all required packages to Azure Function App (Built-in Azure Pipeline task)
+  - Deploy function and all required packages to Azure Function App (Built-in Azure DevOps Pipeline task)
+  - Deploy Private Endpoint from Azure Function App to Azure ML Studio Workspace (ARM template)
+  - Deploy private DNS zone to connect Azure Function App to Azure ML Studio Workspace (ARM template)
   - Proceed all required roles assignment between services (Azure PowerShell)
+  - Deploy API Management service and API for Azure Function App (Azure CLI)
+  - Assign inbound policy to API for Azure Function App (Azure PowerShell)
 
 **airbyte**  
 &emsp;- setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> kafka connection pipeline  
