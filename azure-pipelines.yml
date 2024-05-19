@@ -3,7 +3,7 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'rockettest12500'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
+  resourceGroupName: 'rockettest1253447'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
   location: 'Poland Central'  # changing this should be considered carefully (check supported functionalities and assigned compute quotas)
 
 stages:
@@ -419,7 +419,7 @@ stages:
         displayName: 'Make apimanagement.sh executable'
 
       - task: AzureCLI@2
-        displayName: 'Deploy API Management service and API for function app'
+        displayName: 'Deploy API Management service and API for Function App'
         inputs:
           azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
           scriptType: 'bash'
@@ -429,7 +429,7 @@ stages:
             ./apimanagement.sh $(resourceGroupName) $(lowercaseLocation) $(apiManagementName) $(functionAppName)
 
       - task: AzurePowerShell@5
-        displayName: 'Policy assignment to function API'
+        displayName: 'Inbound policy assignment to function API'
         inputs:
           azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
           ScriptType: 'InlineScript'
@@ -454,5 +454,5 @@ stages:
                       "<base /> " +
                       "</on-error> " +
                       "</policies>"
-            Set-AzApiManagementPolicy -Context $apimContext -ApiId "function" -Policy $policy
+            Set-AzApiManagementPolicy -Context $apimContext -ApiId "function" -Policy $policy -OperationId "post-operation"
           azurePowerShellVersion: 'Latest'
