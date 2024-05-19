@@ -3,8 +3,9 @@ trigger:
 
 variables:
   subscriptionId: '38ca6696-5c82-4571-b2af-bf3f256cf663'
-  resourceGroupName: 'condeploymenttest02'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
+  resourceGroupName: 'condeploymenttest03'  # note that it will be parsed to max 19 lowercase alphanumeric chars anyway
   location: 'Poland Central'  # changing this should be considered carefully (check supported functionalities and assigned compute quotas)
+  azconnection: 'Azure subscription 1 ($(subscriptionId))'
 
 stages:
   - stage: Continuous_Integration
@@ -123,7 +124,7 @@ stages:
         displayName: 'Deploy temporary Azure Blob Storage'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -136,7 +137,7 @@ stages:
       - task: AzureCLI@2
         displayName: 'Upload tar.gz files to temporary storage'  
         inputs:
-          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+          azureSubscription: $(azconnection)
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
@@ -149,7 +150,7 @@ stages:
         displayName: 'Deploy Azure ML Studio Workspace and dependencies'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -163,7 +164,7 @@ stages:
         displayName: 'Deploy Azure Blob Storage'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -177,7 +178,7 @@ stages:
         displayName: 'Deploy Kafka with its infrastructure'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -192,7 +193,7 @@ stages:
         displayName: 'Deploy Airbyte with its infrastructure'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -207,7 +208,7 @@ stages:
         displayName: 'Deploy MLflow with its infrastructure'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -222,7 +223,7 @@ stages:
         displayName: 'Deploy Airflow with its infrastructure'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -237,7 +238,7 @@ stages:
         displayName: 'Deploy VNet Peering between Airbyte and Kafka'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -251,7 +252,7 @@ stages:
         displayName: 'Deploy VNet Peering between Kafka and Airflow'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -265,7 +266,7 @@ stages:
         displayName: 'Deploy VNet Peering between Airflow and MLflow'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -279,7 +280,7 @@ stages:
         displayName: 'Deploy Private Endpoint from Airflow to Azure Blob Storage'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -294,7 +295,7 @@ stages:
         displayName: 'Deploy Private Endpoint from Airflow to Azure ML Studio Workspace'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -308,7 +309,7 @@ stages:
         displayName: 'Deploy private DNS zone to connect Airflow to Azure Blob Storage'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -321,7 +322,7 @@ stages:
       - task: AzurePowerShell@5
         displayName: 'Assign Azure ML Workspace ID to pipeline variable'
         inputs:
-          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+          azureSubscription: $(azconnection)
           ScriptType: 'InlineScript'
           Inline: |
             $workspace = Get-AzResource -ResourceGroupName "$(resourceGroupName)" -ResourceType "Microsoft.MachineLearningServices/workspaces" -Name "mlserving"
@@ -333,7 +334,7 @@ stages:
         displayName: 'Deploy private DNS zone to connect Airflow to Azure ML Studio Workspace'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -347,7 +348,7 @@ stages:
         displayName: 'Deploy Virtual Network for Function App'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -360,7 +361,7 @@ stages:
         displayName: 'Deploy Azure Function App'   
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: '$(subscriptionId)'
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -373,7 +374,7 @@ stages:
       - task: AzureFunctionApp@2
         displayName: 'Deploy packed function to Azure Function App'  
         inputs:
-          connectedServiceNameARM: 'Azure subscription 1 ($(subscriptionId))'
+          connectedServiceNameARM: $(azconnection)
           appType: 'functionAppLinux'
           appName: $(functionAppName)
           package: '$(Pipeline.Workspace)/FunctionAppArtifact/functionapp.zip'
@@ -384,7 +385,7 @@ stages:
         displayName: 'Deploy Private Endpoint from Function App to Azure ML Studio Workspace'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: $(resourceGroupName)
@@ -398,7 +399,7 @@ stages:
         displayName: 'Deploy private DNS zone to connect Function App to Azure ML Studio Workspace'
         inputs:
           deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'Azure subscription 1 ($(subscriptionId))'
+          azureResourceManagerConnection: $(azconnection)
           subscriptionId: $(subscriptionId)
           action: 'Create Or Update Resource Group'
           resourceGroupName: '$(resourceGroupName)functionappdns'
@@ -411,10 +412,10 @@ stages:
       - task: AzurePowerShell@5
         displayName: 'Roles assignment'
         inputs:
-          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+          azureSubscription: $(azconnection)
           ScriptType: 'FilePath'
           ScriptPath: 'scripts/roles_assignment.ps1'
-          ScriptArguments: '-resourceGroupName "$(resourceGroupName)" -functionAppName "$(functionAppName)"'
+          ScriptArguments: '-resourceGroupName "$(resourceGroupName)" -storageAccountName "$(storageAccountName)" -functionAppName "$(functionAppName)"'
           azurePowerShellVersion: 'LatestVersion'
 
       - script: chmod +x function_api/apimanagement.sh
@@ -423,7 +424,7 @@ stages:
       - task: AzureCLI@2
         displayName: 'Deploy API Management service and API for Function App'
         inputs:
-          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+          azureSubscription: $(azconnection)
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
@@ -433,7 +434,7 @@ stages:
       - task: AzurePowerShell@5
         displayName: 'Inbound policy assignment to function API'
         inputs:
-          azureSubscription: 'Azure subscription 1 ($(subscriptionId))'
+          azureSubscription: $(azconnection)
           ScriptType: 'InlineScript'
           Inline: |
             $apimContext = New-AzApiManagementContext -ResourceGroupName "$(resourceGroupName)" -ServiceName "$(apiManagementName)"
