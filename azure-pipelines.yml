@@ -60,7 +60,7 @@ stages:
           tar -czf $(Build.ArtifactStagingDirectory)/services/kafka.tar.gz kafka
           tar -czf $(Build.ArtifactStagingDirectory)/services/airflow.tar.gz airflow
           tar -czf $(Build.ArtifactStagingDirectory)/services/mlflow.tar.gz mlflow
-        displayName: 'Compress folders'
+        displayName: 'Pack folders'
 
       - publish: $(Build.ArtifactStagingDirectory)/functionapp.zip
         artifact: FunctionAppArtifact
@@ -68,7 +68,7 @@ stages:
 
       - publish: $(Build.ArtifactStagingDirectory)/services
         artifact: CompressedFolders
-        displayName: 'Publish compressed folders Artifact'
+        displayName: 'Publish packed folders Artifact'
 
   - stage: Continuous_Deployment
     jobs:
@@ -82,7 +82,7 @@ stages:
 
       - download: current
         artifact: CompressedFolders
-        displayName: 'Download compressed folders Artifact'        
+        displayName: 'Download packed folders Artifact'        
 
       - powershell: |
           $rgn = "$(resourceGroupName)".ToLower() -replace '[^a-z0-9]', ''
