@@ -16,10 +16,12 @@ Development tech stack: TensorFlow/Keras, Kafka Python Client, Azure Python Clie
 4. Set Azure Subscription ID and name for new resource group in azure-pipelines.yaml
 5. Go Azure Portal -> Subscriptions -> choose subscription -> Access control (IAM) -> Add role assignment -> Privileged administrator roles -> User Access Administrator -> select service principal of Azure DevOps project -> set recommended setting in Conditions tab -> Review + assign
 6. Run pipeline and wait for completion
-7. Project is operational. API call will success after enough time to collect some data and train the first version of a model.
+7. Project is operational. API post request to https://a1l45<resourceGroupName>.azure-api.net/function/ with test data in the body will success after enough time to collect some data, train and initially deploy the first version of a model (around 70 minutes).
 
 
 ## Features overview
+Features overview provided by the specific files in the project  
+  
 **azure-pipelines.yaml**  
 &emsp;Continuous Deployment high-level overview:
   - Assign Azure Subscription ID and new resource group name
