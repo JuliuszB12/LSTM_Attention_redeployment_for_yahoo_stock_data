@@ -50,7 +50,7 @@ Overview of the features provided by the specific files in the project
   - Deploy Private Endpoint to Azure ML Studio Workspace from Virtual Network for Airflow infra (ARM template)
   - Deploy private DNS zone required to connect Airflow infra to Azure Blob Storage (ARM template)
   - Deploy private DNS zone required to connect Airflow infra to Azure ML Studio Workspace (ARM template)
-  - Deploy Virtual Network for Azure Function App
+  - Deploy Virtual Network for Azure Function App (ARM template)
   - Deploy Azure Function App (ARM template)
   - Deploy function and all required packages to Azure Function App (Built-in Azure DevOps Pipeline task)
   - Deploy Private Endpoint from Azure Function App to Azure ML Studio Workspace (ARM template)
@@ -60,7 +60,7 @@ Overview of the features provided by the specific files in the project
   - Assign inbound policy to API for Azure Function App (Azure PowerShell)
 
 **airbyte**  
-&emsp;- setup.sh - script to deploy Airbyte docker containers and invoke Terraform deployment for establish yahoo -> kafka connection pipeline  
+&emsp;- setup.sh - script to deploy Airbyte docker containers and invoke Bash script for establish yahoo -> kafka connection pipeline  
   
 **airflow**  
 &emsp;- dags/kafka_dag.py - Airflow DAG: extract data from kafka, transform it and upload to Azure Blob Storage  
